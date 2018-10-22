@@ -1,0 +1,19 @@
+{
+  "name": "node-api",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "~1.0.1",
+    "epilogue": "^0.7.1",
+    "express": "~4.0.0",
+    "pg": "^7.5.0",
+    "sequelize": "^4.39.1",
+    "sqlite": "^3.0.0"
+  },
+  "version": "1.0.0",
+  "description": "Api for voting-system",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "node ."
+  }
+}
