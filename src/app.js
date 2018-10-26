@@ -9,6 +9,7 @@ const app        = express();                 // define our app using express
 const bodyParser = require('body-parser');
 const http       =require('http');
 const { promisify } = require('util');
+const cors = require('cors');
 
 const initializeDatabase = require('./services/database')//USE DATABASE FROM THE SCRIPT
 
@@ -16,6 +17,7 @@ const initializeDatabase = require('./services/database')//USE DATABASE FROM THE
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors());
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -36,7 +38,7 @@ app.use('/api', router);
 // =============================================================================
 const startServer = async () => {
   await initializeDatabase(app); //WAIT UNTIL DATABASE IS INITIALIZED
-  const port = process.env.PORT || 8080;        // set our port
+  const port = process.env.PORT || 8081;        // set our port
   await promisify(app.listen).bind(app)(port)
   console.log('Magic happens on port ' + port);
 }
