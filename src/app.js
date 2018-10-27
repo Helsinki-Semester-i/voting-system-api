@@ -13,6 +13,9 @@ const cors = require('cors');
 
 const initializeDatabase = require('./services/database')//USE DATABASE FROM THE SCRIPT
 
+// require('dotenv').config();
+// process.env.VAR_NAME
+
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
