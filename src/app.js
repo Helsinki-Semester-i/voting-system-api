@@ -1,29 +1,24 @@
-// server.js
+// BASE SETUP =============================================================================
 
-// BASE SETUP
-// =============================================================================
-
-// call the packages we need
-const express    = require('express');        // call express
-const app        = express();                 // define our app using express
+require('dotenv').config();
+const express = require('express');        // call express
+const app = express();                 // define our app using express
 const bodyParser = require('body-parser');
-const http       =require('http');
+const http = require('http');
 const { promisify } = require('util');
 const cors = require('cors');
 
-const initializeDatabase = require('./services/database')//USE DATABASE FROM THE SCRIPT
-
-// require('dotenv').config();
-// process.env.VAR_NAME
+const initializeDatabase = require('./services/database'); //USE DATABASE FROM THE SCRIPT
+const authMiddleware = require('./auth');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
+app.use(authMiddleware);
 
-// ROUTES FOR OUR API
-// =============================================================================
+// ROUTES FOR OUR API =============================================================================
 var router = express.Router();              // get an instance of the express Router
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
@@ -37,8 +32,7 @@ router.get('/', function(req, res) {
 // all of our routes will be prefixed with /api
 app.use('/api', router);
 
-// START THE SERVER
-// =============================================================================
+// START THE SERVER =============================================================================
 const startServer = async () => {
   await initializeDatabase(app); //WAIT UNTIL DATABASE IS INITIALIZED
   const port = process.env.PORT || 8081;        // set our port
