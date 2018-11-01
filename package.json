@@ -2,9 +2,12 @@
   "name": "node-api",
   "main": "server.js",
   "dependencies": {
-    "body-parser": "~1.0.1",
+    "@okta/jwt-verifier": "0.0.14",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "dotenv": "^6.1.0",
     "epilogue": "^0.7.1",
-    "express": "~4.0.0",
+    "express": "^4.16.4",
     "pg": "^7.5.0",
     "sequelize": "^4.39.1",
     "sqlite": "^3.0.0"
