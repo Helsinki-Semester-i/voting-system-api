@@ -10,15 +10,16 @@ const PGPASSWORD= 'postgres'
 const PGDATABASE= 'voting-system-api:us-west2:voting-system-db-production'
 const PGPORT= 5432 //Hace falta definir el puerto
 
-const CAPATH = "../server-ca.pem"
-const KEYPATH = "../client-key.pem"
-const CERTPATH = "../client-cert.pem"
+const CAPATH = "server-ca.pem"
+const KEYPATH = "client-key.pem"
+const CERTPATH = "client-cert.pem"
 
 const config = {
   database : PGDATABASE,
   host     : PGHOST,
   user: PGUSER,
   password: PGPASSWORD,
+  port: PGPORT,
   // this object will be passed to the TLSSocket constructor
   ssl : {
     rejectUnauthorized : false,
@@ -34,7 +35,7 @@ const config = {
 //   password: PGDATABASE,
 //   port: PGPORT,
 // })
-const postgres = new postgres(config)
+const postgres = new Postgres(config);
 postgres.connect()
   .then(client => {
     console.log('connected')
