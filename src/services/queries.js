@@ -4,7 +4,7 @@ const fs = require('fs')
 const PGUSER= 'postgres'
 const PGHOST= '35.224.151.49'
 const PGPASSWORD= 'postgrestest'
-const PGDATABASE= 'voting-system-api:us-central1:test-db'
+const PGDATABASE= 'postgres'
 const PGPORT= 5432 //Hace falta definir el puerto
 
 //const PGUSER= 'postgres'
