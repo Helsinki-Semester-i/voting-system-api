@@ -46,7 +46,7 @@ router.post('/users', async (req, res) => {
     });
     res.json(data);
   } catch (err) {
-    console.log(err);
+    res.json(err);
   }
   
 });
