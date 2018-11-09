@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const { promisify } = require('util');
 const cors = require('cors');
+const axios = require('axios');
 
 const initializeDatabase = require('./services/database'); //USE DATABASE FROM THE SCRIPT
 const authMiddleware = require('./auth');
@@ -27,6 +28,28 @@ router.get('/', function(req, res) {
 });
 
 // more routes for our API will happen here
+router.post('/users', async (req, res) => {
+  let oktaApiUrl = process.env.API_OKTA;
+  let oktaToken = process.env.OKTA_TOKEN;
+
+  try {
+    const { data } = await axios ({
+      method: 'post',
+      url: oktaApiUrl + '/users',
+      data: req.body,
+      params: req.query,
+      headers: {
+        ContentType: 'application/json',
+        Accept: 'application/json',
+        Authorization: 'SSWS ' + oktaToken,
+      }
+    });
+    res.json(data);
+  } catch (err) {
+    console.log(err);
+  }
+  
+});
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

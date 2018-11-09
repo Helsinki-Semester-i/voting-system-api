@@ -19,7 +19,6 @@ module.exports = async (req, res, next) => {
         uid: jwt.claims.uid,
         email: jwt.claims.sub,
       }
-      console.log(jwt);
       if (!jwt.claims.scp.includes(process.env.SCOPE)) {
         return next(new Error('Could not verify the proper scope'));
       }
