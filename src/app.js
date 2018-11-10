@@ -28,21 +28,30 @@ router.get('/', function(req, res) {
 });
 
 // more routes for our API will happen here
-router.post('/users', async (req, res, next) => {
+
+// Add okta information in requests
+router.use('/users', (req, res, next) => {
   let oktaApiUrl = process.env.API_OKTA;
   let oktaToken = process.env.OKTA_TOKEN;
 
+  req.oktaApi = oktaApiUrl;
+  req.oktaHeaders = {
+    ContentType: 'application/json',
+    Accept: 'application/json',
+    Authorization: 'SSWS ' + oktaToken,
+  };
+  next();
+});
+
+// Create users
+router.post('/users', async (req, res, next) => {
   try {
     const { data } = await axios ({
       method: 'post',
-      url: oktaApiUrl + '/users',
+      url: req.oktaApi + '/users',
       data: req.body,
       params: req.query,
-      headers: {
-        ContentType: 'application/json',
-        Accept: 'application/json',
-        Authorization: 'SSWS ' + oktaToken,
-      }
+      headers: req.oktaHeaders,
     });
     res.json(data);
   } catch (err) {
@@ -50,43 +59,29 @@ router.post('/users', async (req, res, next) => {
   }  
 });
 
-router.get('/panelists', async (req, res, next) => {
-  let oktaApiUrl = process.env.API_OKTA;
-  let oktaToken = process.env.OKTA_TOKEN;
+// List all panelists
+router.get('/users/panelists', async (req, res, next) => {
   let panelistId = process.env.OKTA_PANELIST_GROUP;
-
   try {
     const { data } = await axios ({
       method: 'get',
-      url: oktaApiUrl + '/groups/' + panelistId + '/users',
-      headers: {
-        ContentType: 'application/json',
-        Accept: 'application/json',
-        Authorization: 'SSWS ' + oktaToken,
-      }
+      url: req.oktaApi + '/groups/' + panelistId + '/users',
+      headers: req.oktaHeaders,
     });
-    console.log('Data: ', data);
     res.json(data);
   } catch (err) {
     next(err);
   }
 });
 
+// Get a sinlge user info
 router.get('/users/:login', async (req, res, next) => {
-  let oktaApiUrl = process.env.API_OKTA;
-  let oktaToken = process.env.OKTA_TOKEN;
-
   try {
     const { data } = await axios ({
       method: 'get',
-      url: oktaApiUrl + '/users/' + req.params.login,
-      headers: {
-        ContentType: 'application/json',
-        Accept: 'application/json',
-        Authorization: 'SSWS ' + oktaToken,
-      }
+      url: req.oktaApi + '/users/' + req.params.login,
+      headers: req.oktaHeaders,
     });
-    console.log('Data: ', data);
     res.json(data);
   } catch (err) {
     next(err);
@@ -94,21 +89,13 @@ router.get('/users/:login', async (req, res, next) => {
 });
 
 // Deactivate user
-// https://developer.okta.com/docs/api/resources/users#deactivate-user
 router.post('/users/:userId', async (req, res, next) => {
-  let oktaApiUrl = process.env.API_OKTA;
-  let oktaToken = process.env.OKTA_TOKEN;
   try {
     const { data } = await axios ({
       method: 'post',
-      url: oktaApiUrl + '/users/' + req.params.userId + 'lifecycle/deactivate',
-      headers: {
-        ContentType: 'application/json',
-        Accept: 'application/json',
-        Authorization: 'SSWS ' + oktaToken,
-      }
+      url: req.oktaApi + '/users/' + req.params.userId + 'lifecycle/deactivate',
+      headers: req.oktaHeaders,
     });
-    console.log('Data: ', data);
     res.json(data);
   } catch (err) {
     next(err);
@@ -117,19 +104,25 @@ router.post('/users/:userId', async (req, res, next) => {
 
 // Delete user
 router.delete('/users/:userId', async (req, res, next) => {
-  let oktaApiUrl = process.env.API_OKTA;
-  let oktaToken = process.env.OKTA_TOKEN;
+  // First deactivate user
+  try {
+    const { data } = await axios ({
+      method: 'post',
+      url: req.oktaApi + '/users/' + req.params.userId + '/lifecycle/deactivate',
+      headers: req.oktaHeaders,
+    });
+    next();
+  } catch (err) {
+    next(err);
+  }
+}, async (req, res, next) => {
+  // Then remove it
   try {
     const { data } = await axios ({
       method: 'delete',
-      url: oktaApiUrl + '/users/' + req.params.userId,
-      headers: {
-        ContentType: 'application/json',
-        Accept: 'application/json',
-        Authorization: 'SSWS ' + oktaToken,
-      }
+      url: req.oktaApi + '/users/' + req.params.userId,
+      headers: req.oktaHeaders,
     });
-    console.log('Data: ', data);
     res.json(data);
   } catch (err) {
     next(err);
