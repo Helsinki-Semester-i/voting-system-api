@@ -17,7 +17,7 @@ const authMiddleware = require('./auth');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
-app.use(authMiddleware);
+//app.use(authMiddleware);
 
 // ROUTES FOR OUR API =============================================================================
 var router = express.Router();              // get an instance of the express Router
@@ -28,7 +28,7 @@ router.get('/', function(req, res) {
 });
 
 // more routes for our API will happen here
-router.post('/users', async (req, res) => {
+router.post('/users', async (req, res, next) => {
   let oktaApiUrl = process.env.API_OKTA;
   let oktaToken = process.env.OKTA_TOKEN;
 
@@ -45,8 +45,30 @@ router.post('/users', async (req, res) => {
       }
     });
     res.json(data);
-  } catch (err) {
-    res.json(err);
+  } catch (error) {
+    if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log('Response error data: ', error.response.data);
+        console.log('Error Status: ', error.response.status);
+        console.log('Error Header: ', error.response.headers);
+
+        res.status(error.response.status).json(error.response.data);
+        next(error.response);
+    } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log('Request error ', error.request);
+        res.json(error.request);
+        next(error.request);
+    } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+        res.json(error.message);
+        next(error.message);
+    }
+    console.log('Error config: ', error.config);
   }
   
 });
