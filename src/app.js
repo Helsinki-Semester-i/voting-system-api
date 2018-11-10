@@ -45,33 +45,114 @@ router.post('/users', async (req, res, next) => {
       }
     });
     res.json(data);
-  } catch (error) {
-    if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log('Response error data: ', error.response.data);
-        console.log('Error Status: ', error.response.status);
-        console.log('Error Header: ', error.response.headers);
-
-        res.status(error.response.status).json(error.response.data);
-        next(error.response);
-    } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log('Request error ', error.request);
-        res.json(error.request);
-        next(error.request);
-    } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
-        res.json(error.message);
-        next(error.message);
-    }
-    console.log('Error config: ', error.config);
-  }
-  
+  } catch (err) {
+    next(err)
+  }  
 });
+
+router.get('/panelists', async (req, res, next) => {
+  let oktaApiUrl = process.env.API_OKTA;
+  let oktaToken = process.env.OKTA_TOKEN;
+  let panelistId = process.env.OKTA_PANELIST_GROUP;
+
+  try {
+    const { data } = await axios ({
+      method: 'get',
+      url: oktaApiUrl + '/groups/' + panelistId + '/users',
+      headers: {
+        ContentType: 'application/json',
+        Accept: 'application/json',
+        Authorization: 'SSWS ' + oktaToken,
+      }
+    });
+    console.log('Data: ', data);
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/users/:login', async (req, res, next) => {
+  let oktaApiUrl = process.env.API_OKTA;
+  let oktaToken = process.env.OKTA_TOKEN;
+
+  try {
+    const { data } = await axios ({
+      method: 'get',
+      url: oktaApiUrl + '/users/' + req.params.login,
+      headers: {
+        ContentType: 'application/json',
+        Accept: 'application/json',
+        Authorization: 'SSWS ' + oktaToken,
+      }
+    });
+    console.log('Data: ', data);
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Deactivate user
+// https://developer.okta.com/docs/api/resources/users#deactivate-user
+router.post('/users/:userId', async (req, res, next) => {
+  let oktaApiUrl = process.env.API_OKTA;
+  let oktaToken = process.env.OKTA_TOKEN;
+  try {
+    const { data } = await axios ({
+      method: 'post',
+      url: oktaApiUrl + '/users/' + req.params.userId + 'lifecycle/deactivate',
+      headers: {
+        ContentType: 'application/json',
+        Accept: 'application/json',
+        Authorization: 'SSWS ' + oktaToken,
+      }
+    });
+    console.log('Data: ', data);
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Delete user
+router.delete('/users/:userId', async (req, res, next) => {
+  let oktaApiUrl = process.env.API_OKTA;
+  let oktaToken = process.env.OKTA_TOKEN;
+  try {
+    const { data } = await axios ({
+      method: 'delete',
+      url: oktaApiUrl + '/users/' + req.params.userId,
+      headers: {
+        ContentType: 'application/json',
+        Accept: 'application/json',
+        Authorization: 'SSWS ' + oktaToken,
+      }
+    });
+    console.log('Data: ', data);
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+});
+
+function errorHandler(err, req, res, next) {
+  if (err.response) {
+    console.log('Response error data: ', err.response.data);
+    console.log('Error Status: ', err.response.status);
+    console.log('Error Header: ', err.response.headers);
+    res.status(err.response.status).json(err.response.data);
+  } else if (err.request) {
+    console.log('Request error ', err.request);
+    res.json(err.request);
+  } else {
+    console.log('Error', err.message);
+    res.json(err.message);
+  }
+  console.log('Error config: ', err.config)
+}
+
+router.use(errorHandler);
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
