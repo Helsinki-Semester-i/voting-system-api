@@ -1,28 +1,29 @@
-const Sequelize = require('sequelize')
-const epilogue = require('epilogue')
+const fs = require('fs')
 
-const database = new Sequelize({
-  dialect: 'sqlite',
-  storage: './test.sqlite',
-  operatorsAliases: false
+const Pool = require('pg').Pool
+
+const PGUSER= process.env.PGUSER;
+const PGHOST= process.env.PGHOST;
+const PGPASSWORD= process.env.PGPASSWORD;
+const PGDATABASE= process.env.PGDATABASE;
+const PGPORT= process.env.PGPORT;
+const CAPATH = process.env.CAPATH;
+const KEYPATH = process.env.KEYPATH;
+const CERTPATH = process.env.CERTPATH;
+
+const DataBase = new Pool({
+  database : PGDATABASE,
+  host     : PGHOST,
+  user: PGUSER,
+  password: PGPASSWORD,
+  port: PGPORT,
+  // this object will be passed to the TLSSocket constructor
+  //ssl : {
+  //  rejectUnauthorized : false,
+  //  ca   : fs.readFileSync(CAPATH).toString(),
+  //  key  : fs.readFileSync(KEYPATH).toString(),
+  //  cert : fs.readFileSync(CERTPATH).toString(),
+  //}
 })
 
-const Part = database.define('parts', {
-  partNumber: Sequelize.STRING,
-  modelNumber: Sequelize.STRING,
-  name: Sequelize.STRING,
-  description: Sequelize.TEXT
-})
-
-const initializeDatabase = async (app) => {
-  epilogue.initialize({ app, sequelize: database })
-
-  epilogue.resource({
-    model: Part,
-    endpoints: ['/parts', '/parts/:id']
-  })
-
-  await database.sync()
-}
-
-module.exports = initializeDatabase
+module.exports = DataBase

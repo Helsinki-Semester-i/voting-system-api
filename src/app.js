@@ -4,12 +4,13 @@ require('dotenv').config();
 const express = require('express');        // call express
 const app = express();                 // define our app using express
 const bodyParser = require('body-parser');
-const http = require('http');
 const { promisify } = require('util');
 const cors = require('cors');
+const port = process.env.PORT;
+const routes = require('./routes/index.js');
 const axios = require('axios');
 
-const initializeDatabase = require('./services/database'); //USE DATABASE FROM THE SCRIPT
+
 const authMiddleware = require('./auth');
 
 // configure app to use bodyParser()
@@ -20,6 +21,7 @@ app.use(cors());
 //app.use(authMiddleware);
 
 // ROUTES FOR OUR API =============================================================================
+app.use('/', routes);
 var router = express.Router();              // get an instance of the express Router
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
@@ -152,10 +154,6 @@ router.use(errorHandler);
 app.use('/api', router);
 
 // START THE SERVER =============================================================================
-const startServer = async () => {
-  await initializeDatabase(app); //WAIT UNTIL DATABASE IS INITIALIZED
-  const port = process.env.PORT || 8081;        // set our port
-  await promisify(app.listen).bind(app)(port)
-  console.log('Magic happens on port ' + port);
-}
-startServer();
+app.listen(port, () => {
+  console.log(`App running on port ${port}.`)
+})

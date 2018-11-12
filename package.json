@@ -8,6 +8,7 @@
     "dotenv": "^6.1.0",
     "epilogue": "^0.7.1",
     "express": "^4.16.4",
+    "fs": "^0.0.1-security",
     "pg": "^7.5.0",
     "sequelize": "^4.39.1",
     "sqlite": "^3.0.0"
