@@ -14,7 +14,7 @@ const getUserById = (request, response) => {
 
     DataBase.query('SELECT * FROM wiki_user WHERE id = $1', [id], (error, results) => {
         if (error) {
-        throw error
+            throw error
         }
         response.status(200).json(results.rows)
     })
