@@ -2,21 +2,15 @@ const fs = require('fs')
 
 const Pool = require('pg').Pool
 
-const PGUSER= 'postgres'
-const PGHOST= '35.224.151.49'
-const PGPASSWORD= 'postgrestest'
-const PGDATABASE= 'postgres'
-const PGPORT= 5432 //Hace falta definir el puerto
+const PGUSER= process.env.PGUSER;
+const PGHOST= process.env.PGHOST;
+const PGPASSWORD= process.env.PGPASSWORD;
+const PGDATABASE= process.env.PGDATABASE;
+const PGPORT= process.env.PGPORT;
+const CAPATH = process.env.CAPATH;
+const KEYPATH = process.env.KEYPATH;
+const CERTPATH = process.env.CERTPATH;
 
-//const PGUSER= 'postgres'
-//const PGHOST= '35.236.121.106'
-//const PGPASSWORD= 'postgres'
-//const PGDATABASE= 'postgres'
-//const PGPORT= 5432 //Hace falta definir el puerto
-
-//const CAPATH = "server-ca.pem"
-//const KEYPATH = "client-key.pem"
-//const CERTPATH = "client-cert.pem"
 const DataBase = new Pool({
   database : PGDATABASE,
   host     : PGHOST,

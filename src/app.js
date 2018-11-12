@@ -4,13 +4,11 @@ require('dotenv').config();
 const express = require('express');        // call express
 const app = express();                 // define our app using express
 const bodyParser = require('body-parser');
-const http = require('http');
 const { promisify } = require('util');
 const cors = require('cors');
-const port = 8000;
+const port = process.env.PORT;
 const routes = require('./routes/index.js');
 
-const initializeDatabase = require('./services/database'); //USE DATABASE FROM THE SCRIPT
 const authMiddleware = require('./auth');
 
 // configure app to use bodyParser()
