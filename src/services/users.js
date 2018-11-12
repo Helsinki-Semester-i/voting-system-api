@@ -1,5 +1,3 @@
-const Pool = require('pg').Pool
-const fs = require('fs')
 const DataBase = require('./database.js')
 
 const getUsers = (request, response) => {
@@ -14,7 +12,7 @@ const getUsers = (request, response) => {
 const getUserById = (request, response) => {
     const id = parseInt(request.params.id)
 
-    pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
+    DataBase.query('SELECT * FROM wiki_user WHERE id = $1', [id], (error, results) => {
         if (error) {
         throw error
         }
@@ -25,7 +23,7 @@ const getUserById = (request, response) => {
 const createUser = (request, response) => {
     const { name, email } = request.body
 
-    pool.query('INSERT INTO users (name, email) VALUES ($1, $2)', [name, email], (error, results) => {
+    DataBase.query('INSERT INTO wiki_user (name, email) VALUES ($1, $2)', [name, email], (error, results) => {
         if (error) {
         throw error
         }
@@ -37,8 +35,8 @@ const updateUser = (request, response) => {
     const id = parseInt(request.params.id)
     const { name, email } = request.body
   
-    pool.query(
-      'UPDATE users SET name = $1, email = $2 WHERE id = $3',
+    DataBase.query(
+      'UPDATE wiki_user SET name = $1, email = $2 WHERE id = $3',
       [name, email, id],
       (error, results) => {
         if (error) {
@@ -52,7 +50,7 @@ const updateUser = (request, response) => {
 const deleteUser = (request, response) => {
     const id = parseInt(request.params.id)
   
-    pool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
+    DataBase.query('DELETE FROM wiki_user WHERE id = $1', [id], (error, results) => {
       if (error) {
         throw error
       }

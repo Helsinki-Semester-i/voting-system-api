@@ -7,8 +7,8 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const { promisify } = require('util');
 const cors = require('cors');
-const db = require('./services/queries.js');
 const port = 8000;
+const routes = require('./routes/index.js');
 
 const initializeDatabase = require('./services/database'); //USE DATABASE FROM THE SCRIPT
 const authMiddleware = require('./auth');
@@ -21,14 +21,7 @@ app.use(cors());
 //app.use(authMiddleware);
 
 // ROUTES FOR OUR API =============================================================================
-app.get('/', (request, response) => {
-  response.json({ info: 'Node.js, Express, and Postgres API' })
-})
-app.get('/users', db.getUsers)
-app.get('/users/:id', db.getUserById)
-app.post('/users', db.createUser)
-app.put('/users/:id', db.updateUser)
-app.delete('/users/:id', db.deleteUser)
+app.use('/', routes);
 
 // START THE SERVER =============================================================================
 app.listen(port, () => {
