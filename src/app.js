@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const { promisify } = require('util');
 const cors = require('cors');
+const db = require('./services/queries.js');
+const port = 8000;
 
 const initializeDatabase = require('./services/database'); //USE DATABASE FROM THE SCRIPT
 const authMiddleware = require('./auth');
@@ -16,27 +18,19 @@ const authMiddleware = require('./auth');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
-app.use(authMiddleware);
+//app.use(authMiddleware);
 
 // ROUTES FOR OUR API =============================================================================
-var router = express.Router();              // get an instance of the express Router
-
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });
-});
-
-// more routes for our API will happen here
-
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-app.use('/api', router);
+app.get('/', (request, response) => {
+  response.json({ info: 'Node.js, Express, and Postgres API' })
+})
+app.get('/users', db.getUsers)
+app.get('/users/:id', db.getUserById)
+app.post('/users', db.createUser)
+app.put('/users/:id', db.updateUser)
+app.delete('/users/:id', db.deleteUser)
 
 // START THE SERVER =============================================================================
-const startServer = async () => {
-  await initializeDatabase(app); //WAIT UNTIL DATABASE IS INITIALIZED
-  const port = process.env.PORT || 8081;        // set our port
-  await promisify(app.listen).bind(app)(port)
-  console.log('Magic happens on port ' + port);
-}
-startServer();
+app.listen(port, () => {
+  console.log(`App running on port ${port}.`)
+})

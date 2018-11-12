@@ -1,38 +1,9 @@
 const Pool = require('pg').Pool
 const fs = require('fs')
-
-const PGUSER= 'postgres'
-const PGHOST= '35.224.151.49'
-const PGPASSWORD= 'postgrestest'
-const PGDATABASE= 'postgres'
-const PGPORT= 5432 //Hace falta definir el puerto
-
-//const PGUSER= 'postgres'
-//const PGHOST= '35.236.121.106'
-//const PGPASSWORD= 'postgres'
-//const PGDATABASE= 'voting-system-api:us-west2:voting-system-db-production'
-//const PGPORT= 5432 //Hace falta definir el puerto
-
-//const CAPATH = "server-ca.pem"
-//const KEYPATH = "client-key.pem"
-//const CERTPATH = "client-cert.pem"
-const pool = new Pool({
-  database : PGDATABASE,
-  host     : PGHOST,
-  user: PGUSER,
-  password: PGPASSWORD,
-  port: PGPORT,
-  // this object will be passed to the TLSSocket constructor
-  //ssl : {
-  //  rejectUnauthorized : false,
-  //  ca   : fs.readFileSync(CAPATH).toString(),
-  //  key  : fs.readFileSync(KEYPATH).toString(),
-  //  cert : fs.readFileSync(CERTPATH).toString(),
-  //}
-})
+const DataBase = require('./database.js')
 
 const getUsers = (request, response) => {
-    pool.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
+    DataBase.query('SELECT * FROM wiki_user ORDER BY id ASC', (error, results) => {
       if (error) {
         throw error
       }
