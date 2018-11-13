@@ -1,11 +1,13 @@
 const DataBase = require('./database.js')
+const Error = require('../errors/statusError');
 
-const getUsers = (request, response, next) => {
+const getUsers = () => {
     DataBase.query('SELECT * FROM wiki_user ORDER BY id ASC', (error, results) => {
       if (error) {
-        next(error);
+        console.log(error);
+        throw new Error(500, 'Error conecting to DB');
       }
-      response.status(200).json(results.rows)
+      return results.rows;
     })
 }
 
