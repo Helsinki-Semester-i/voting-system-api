@@ -1,15 +1,15 @@
-const fs = require('fs');
+// const fs = require('fs');
 
-const Pool = require('pg').Pool;
+const { Pool } = require('pg');
 
-const PGUSER = process.env.PGUSER;
-const PGHOST = process.env.PGHOST;
-const PGPASSWORD = process.env.PGPASSWORD;
-const PGDATABASE = process.env.PGDATABASE;
-const PGPORT = process.env.PGPORT;
-const CAPATH = process.env.CAPATH;
-const KEYPATH = process.env.KEYPATH;
-const CERTPATH = process.env.CERTPATH;
+const { PGUSER } = process.env;
+const { PGHOST } = process.env;
+const { PGPASSWORD } = process.env;
+const { PGDATABASE } = process.env;
+const { PGPORT } = process.env;
+// const { CAPATH } = process.env;
+// const { KEYPATH } = process.env;
+// const { CERTPATH } = process.env;
 
 const DataBase = new Pool({
   database: PGDATABASE,

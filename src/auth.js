@@ -6,6 +6,7 @@ const oktaJwtVerifier = new OktaJwtVerifier({
 });
 
 // verify JWT token middleware
+// eslint-disable-next-line consistent-return
 module.exports = async (req, res, next) => {
   // require every request to have an authorization header
   if (!req.headers.authorization) {
@@ -14,6 +15,7 @@ module.exports = async (req, res, next) => {
   const parts = req.headers.authorization.trim().split(' ');
   const accessToken = parts.pop();
   oktaJwtVerifier.verifyAccessToken(accessToken)
+    // eslint-disable-next-line consistent-return
     .then((jwt) => {
       req.user = {
         uid: jwt.claims.uid,

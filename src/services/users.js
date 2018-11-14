@@ -5,16 +5,16 @@ const Error = require('../errors/statusError');
 const getUsers = async () => {
   try {
     const results = await DataBase.query('SELECT * FROM wiki_user ORDER BY id ASC');
-    console.log('Request to get users');
+    console.log('Request to get users'); // eslint-disable-line
     return results.rows;
   } catch (error) {
-    console.log('error: ', error);
+    console.log('error: ', error); // eslint-disable-line
     throw new Error(500, 'Error conecting to DB');
   }
 };
 
 const getUserById = (request, response, next) => {
-  const id = parseInt(request.params.id);
+  const { id } = parseInt(request.params);
 
   DataBase.query('SELECT * FROM wiki_user WHERE id = $1', [id], (error, results) => {
     if (error) {

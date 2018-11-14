@@ -9,7 +9,7 @@ const cors = require('cors');
 
 const port = process.env.PORT;
 const routes = require('./routes/index.js');
-const authMiddleware = require('./auth');
+const authMiddleware = require('./auth'); // eslint-disable-line
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -23,5 +23,5 @@ app.use('/', routes);
 
 // START THE SERVER =============================================================================
 app.listen(port, () => {
-  console.log(`App running on port ${port}.`);
+  console.log(`App running on port ${port}.`); // eslint-disable-line
 });
