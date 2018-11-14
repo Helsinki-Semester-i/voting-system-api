@@ -4,7 +4,7 @@ const getVotes = (request, response) => {
     response.status(200);
 }
 
-const getVoteByID = (request, response) => {
+const getVoteById = (request, response) => {
     response.status(200);
 }
 
@@ -12,4 +12,4 @@ const postVote = (request, response) => {
     response.status(200);
 }
 
-module.exports = {getVotes, getVoteByID, postVote}
+module.exports = {getVotes, getVoteById, postVote}

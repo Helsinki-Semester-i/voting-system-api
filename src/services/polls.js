@@ -1,10 +1,15 @@
 const DataBase = require('./database.js')
 
 const getPolls = (request, response) => {
-    response.status(200);
+    DataBase.query('SELECT * FROM poll', (error, results) => {
+        if (error) {
+          next(error);
+        }
+        response.status(200).json(results.rows)
+      })
 }
 
-const getPollByID = (request, response) => {
+const getPollById = (request, response) => {
     response.status(200);
 }
 
@@ -12,4 +17,4 @@ const postPoll = (request, response) => {
     response.status(200);
 }
 
-module.exports = {getPolls, getPollByID, postPoll}
+module.exports = {getPolls, getPollById, postPoll}
