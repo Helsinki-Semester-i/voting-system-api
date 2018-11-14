@@ -1,11 +1,19 @@
 const userService = require('../services/users.js');
 
-const getUsers = (req, res) => {
+const Error = require('../errors/statusError');
+const utils = require('../utils/utils.js');
+
+const getUsers = async (req, res) => {
   try {
-    let data = userService.getUsers;
+    if (!utils.isEmptyObject(req.query)) {
+      throw new Error(400, 'Query params are not supported yet');    
+    }
+    let data = await userService.getUsers()
+    console.log('dsadas: ', data);
     res.status(200).json(data);
+    
   } catch (err) {
-    res.status(err.code).send(err.msg);
+    res.status(err.code).send({ error: err.msg });
   }
 };
 
