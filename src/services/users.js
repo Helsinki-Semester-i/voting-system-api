@@ -5,7 +5,7 @@ const Error = require('../errors/statusError');
 const getUsers = async () => {
     try {
         const results = await DataBase.query('SELECT * FROM wiki_user ORDER BY id ASC');
-        console.log('res: ', results.rows)
+        console.log('Request to get users')
         return results.rows;
     } catch (error) {
         console.log('error: ', error);

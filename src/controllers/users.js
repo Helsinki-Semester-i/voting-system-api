@@ -9,7 +9,6 @@ const getUsers = async (req, res) => {
       throw new Error(400, 'Query params are not supported yet');    
     }
     let data = await userService.getUsers()
-    console.log('dsadas: ', data);
     res.status(200).json(data);
     
   } catch (err) {
