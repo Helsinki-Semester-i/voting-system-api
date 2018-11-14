@@ -13,5 +13,5 @@ class StatusError extends Error {
     this.msg = msg;
   }
 }
-  
+
 module.exports = StatusError;

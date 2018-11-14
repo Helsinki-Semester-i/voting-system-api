@@ -1,7 +1,5 @@
-const isEmptyObject = (obj) => {
-  return (Object.getOwnPropertyNames(obj).length === 0);
-};
+const isEmptyObject = obj => (Object.getOwnPropertyNames(obj).length === 0);
 
-module.exports= {
+module.exports = {
   isEmptyObject,
 };

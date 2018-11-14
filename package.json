@@ -17,6 +17,12 @@
   "license": "MIT",
   "scripts": {
     "start": "node src/app.js",
-    "test": "node ."
+    "test": "node .",
+    "lint": "./node_modules/.bin/eslint"
+  },
+  "devDependencies": {
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
   }
 }
