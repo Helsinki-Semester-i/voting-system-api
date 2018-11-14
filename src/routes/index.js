@@ -28,6 +28,6 @@ function errorHandler(err, req, res, next) {
   console.log('Error config: ', err.config)
 }
 
-router.use(errorHandler);
+// router.use(errorHandler);
 
 module.exports = router
