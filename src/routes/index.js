@@ -3,6 +3,9 @@ var router = express.Router();
 
 const users = require('./users.js');
 const oauth = require('./oauth.js');
+const polls = require('./polls.js');
+const votes = require('./votes.js');
+const results = require('./results.js');
 
 router.get('/', (request, response) => {
     response.json({ info: 'Bienvenido a la API de Wikipolitica Voting-System' })
@@ -10,6 +13,10 @@ router.get('/', (request, response) => {
 
 router.use('/users', users);
 router.use('/oauth', oauth);
+router.use('/polls', polls);
+router.use('/votes', votes);
+router.use('/results', results); 
+
 //ADD MORE ROUTES HERE
 
 function errorHandler(err, req, res, next) {
