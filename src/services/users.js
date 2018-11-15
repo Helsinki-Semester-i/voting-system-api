@@ -1,67 +1,67 @@
-const DataBase = require('./database.js')
+const DataBase = require('./database.js');
 
-const getUsers = (request, response, next) => {
-    DataBase.query('SELECT * FROM wiki_user ORDER BY id ASC', (error, results) => {
-      if (error) {
-        next(error);
-      }
-      response.status(200).json(results.rows)
-    })
-}
+const Error = require('../errors/statusError');
 
-const getUserById = (request, response, next) => {
-    const id = parseInt(request.params.id)
+const getUsers = async () => {
+  try {
+    const results = await DataBase.query('SELECT * FROM wiki_user ORDER BY id ASC');
+    console.log('Request to get users'); // eslint-disable-line
+    return results.rows;
+  } catch (error) {
+    console.log('error: ', error); // eslint-disable-line
+    throw new Error(500, 'Error conecting to DB');
+  }
+};
 
-    DataBase.query('SELECT * FROM wiki_user WHERE id = $1', [id], (error, results) => {
-        if (error) {
-            next(error);
-        }
-        response.status(200).json(results.rows)
-    })
-}
+const getUserById = async (id) => {
+  try {
+    const results = await DataBase.query('SELECT * FROM wiki_user WHERE id = $1', [id]);
+    console.log(`Request to get user with id: ${id}`); // eslint-disable-line
+    return results.rows;
+  } catch (error) {
+    console.log('error: ', error); // eslint-disable-line
+    throw new Error(500, 'Error conecting to DB');
+  }
+};
 
-const createUser = (request, response, next) => {
-    const { name, email } = request.body
+const createUser = async (name, email) => {
+  try {
+    const results = await DataBase.query('INSERT INTO wiki_user (name, email) VALUES ($1, $2)', [name, email]);
+    console.log(`User created with name ${name}, email ${email}, and id ${results.insertedId}`); // eslint-disable-line
+    return results.insertedId;
+  } catch (error) {
+    console.log('error: ', error); // eslint-disable-line
+    throw new Error(500, 'Error conecting to DB');
+  }
+};
 
-    DataBase.query('INSERT INTO wiki_user (name, email) VALUES ($1, $2)', [name, email], (error, results) => {
-        if (error) {
-            next(error);
-        }
-        response.status(201).send(`User added with ID: ${result.insertId}`)
-    })
-}
-
-const updateUser = (request, response, next) => {
-    const id = parseInt(request.params.id)
-    const { name, email } = request.body
-  
-    DataBase.query(
+const updateUser = async (id, name, email) => {
+  try {
+    await DataBase.query(
       'UPDATE wiki_user SET name = $1, email = $2 WHERE id = $3',
       [name, email, id],
-      (error, results) => {
-        if (error) {
-            next(error);
-        }
-        response.status(200).send(`User modified with ID: ${id}`)
-      }
-    )
-}
+    );
+    console.log(`User modified with ID: ${id}`); // eslint-disable-line
+  } catch (error) {
+    console.log('error: ', error); // eslint-disable-line
+    throw new Error(500, 'Error conecting to DB');
+  }
+};
 
-const deleteUser = (request, response, next) => {
-    const id = parseInt(request.params.id)
-  
-    DataBase.query('DELETE FROM wiki_user WHERE id = $1', [id], (error, results) => {
-      if (error) {
-        next(error);
-      }
-      response.status(200).send(`User deleted with ID: ${id}`)
-    })
-}
+const deleteUser = async (id) => {
+  try {
+    await DataBase.query('DELETE FROM wiki_user WHERE id = $1', [id]);
+    console.log(`User deleted with ID: ${id}`); // eslint-disable-line
+  } catch (error) {
+    console.log('error: ', error); // eslint-disable-line
+    throw new Error(500, 'Error conecting to DB');
+  }
+};
 
 module.exports = {
-    getUsers,
-    getUserById,
-    createUser,
-    updateUser,
-    deleteUser,
-}
+  getUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+};
