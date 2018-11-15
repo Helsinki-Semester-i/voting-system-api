@@ -39,7 +39,6 @@ const getPanelists = async (req, res, next) => {
       headers: req.oktaHeaders,
     });
     res.json(data);
-    next();
   } catch (err) {
     next(err);
   }
@@ -65,7 +64,7 @@ const getUserByMail = async (req, res, next) => {
 const deactivateUser = async (req, res, next) => {
   // First deactivate user
   try {
-    const { data } = await axios({
+    await axios({
       method: 'post',
       url: `${req.oktaApi}/users/${req.params.userId}/lifecycle/deactivate`,
       headers: req.oktaHeaders,
@@ -91,6 +90,22 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
+const errorHandler = (err, req, res, next) => { // eslint-disable-line
+  if (err.response) {
+    console.log('Response error data: ', err.response.data); // eslint-disable-line
+    console.log('Error Status: ', err.response.status); // eslint-disable-line
+    console.log('Error Header: ', err.response.headers); // eslint-disable-line
+    res.status(err.response.status).json(err.response.data);
+  } else if (err.request) {
+    console.log('Request error ', err.request); // eslint-disable-line
+    res.json(err.request);
+  } else {
+    console.log('Error', err.message); // eslint-disable-line
+    res.json(err.message);
+  }
+  console.log('Error config: ', err.config); // eslint-disable-line
+};
+
 module.exports = {
-  addHeaders, createUser, getPanelists, getUserByMail, deactivateUser, deleteUser,
+  addHeaders, createUser, getPanelists, getUserByMail, deactivateUser, deleteUser, errorHandler,
 };
