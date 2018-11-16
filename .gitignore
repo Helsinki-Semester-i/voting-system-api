@@ -62,3 +62,6 @@ typings/
 
 #SSL certificates
 .pem
+
+# Sonar cloud
+.scannerwork/
