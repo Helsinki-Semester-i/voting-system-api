@@ -1,5 +1,7 @@
 const axios = require('axios');
 
+const Log = require('../utils/logger');
+
 // Add okta information in requests
 const addHeaders = (req, res, next) => {
   const oktaApiUrl = process.env.API_OKTA;
@@ -92,18 +94,20 @@ const deleteUser = async (req, res, next) => {
 
 const errorHandler = (err, req, res, next) => { // eslint-disable-line
   if (err.response) {
-    console.log('Response error data: ', err.response.data); // eslint-disable-line
-    console.log('Error Status: ', err.response.status); // eslint-disable-line
-    console.log('Error Header: ', err.response.headers); // eslint-disable-line
+    Log.error(`Okta response Error at API\n
+      Response error data: ${err.response.data}\n
+      Error Status: ${err.response.status}\n
+      Error Header: ${err.response.headers}
+    `);
     res.status(err.response.status).json(err.response.data);
   } else if (err.request) {
-    console.log('Request error ', err.request); // eslint-disable-line
+    Log.error(`Okta request Error at API\n Request error: ${err.request}`);
     res.json(err.request);
   } else {
-    console.log('Error', err.message); // eslint-disable-line
+    Log.error(`Okta unknown error: ${err.message}`);
     res.json(err.message);
   }
-  console.log('Error config: ', err.config); // eslint-disable-line
+  Log.warn(`Okta Error config: ${err.config}`); // eslint-disable-line
 };
 
 module.exports = {

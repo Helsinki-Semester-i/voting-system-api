@@ -10,7 +10,9 @@
     "express": "^4.16.4",
     "fs": "^0.0.1-security",
     "pg": "^7.6.1",
-    "sequelize": "^4.41.2"
+    "sequelize": "^4.41.2",
+    "winston": "^3.1.0",
+    "winston-daily-rotate-file": "^3.5.1"
   },
   "version": "1.0.0",
   "description": "Api for voting-system",
