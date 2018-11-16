@@ -1,6 +1,7 @@
 const DataBase = require('./database.js');
 
 const Error = require('../errors/statusError');
+const CODES = require('../constants/httpCodes');
 
 const getUsers = async () => {
   try {
@@ -9,7 +10,7 @@ const getUsers = async () => {
     return results.rows;
   } catch (error) {
     console.log('error: ', error); // eslint-disable-line
-    throw new Error(500, 'Error conecting to DB');
+    throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
 
@@ -20,7 +21,7 @@ const getUserById = async (id) => {
     return results.rows;
   } catch (error) {
     console.log('error: ', error); // eslint-disable-line
-    throw new Error(500, 'Error conecting to DB');
+    throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
 
@@ -31,7 +32,7 @@ const createUser = async (name, email) => {
     return results.insertedId;
   } catch (error) {
     console.log('error: ', error); // eslint-disable-line
-    throw new Error(500, 'Error conecting to DB');
+    throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
 
@@ -44,7 +45,7 @@ const updateUser = async (id, name, email) => {
     console.log(`User modified with ID: ${id}`); // eslint-disable-line
   } catch (error) {
     console.log('error: ', error); // eslint-disable-line
-    throw new Error(500, 'Error conecting to DB');
+    throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
 
@@ -54,7 +55,7 @@ const deleteUser = async (id) => {
     console.log(`User deleted with ID: ${id}`); // eslint-disable-line
   } catch (error) {
     console.log('error: ', error); // eslint-disable-line
-    throw new Error(500, 'Error conecting to DB');
+    throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
 
