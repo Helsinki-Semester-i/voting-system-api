@@ -1,15 +1,16 @@
 const DataBase = require('./database.js');
 
+const Log = require('../utils/logger');
 const Error = require('../errors/statusError');
 const CODES = require('../constants/httpCodes');
 
 const getUsers = async () => {
   try {
     const results = await DataBase.query('SELECT * FROM wiki_user ORDER BY id ASC');
-    console.log('Request to get users'); // eslint-disable-line
+    Log.info('Request for all users');
     return results.rows;
   } catch (error) {
-    console.log('error: ', error); // eslint-disable-line
+    Log.error(error);
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
@@ -17,10 +18,10 @@ const getUsers = async () => {
 const getUserById = async (id) => {
   try {
     const results = await DataBase.query('SELECT * FROM wiki_user WHERE id = $1', [id]);
-    console.log(`Request to get user with id: ${id}`); // eslint-disable-line
+    Log.info(`Request to get user with id: ${id}`);
     return results.rows;
   } catch (error) {
-    console.log('error: ', error); // eslint-disable-line
+    Log.error(error);
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
@@ -28,10 +29,10 @@ const getUserById = async (id) => {
 const createUser = async (name, email) => {
   try {
     const results = await DataBase.query('INSERT INTO wiki_user (name, email) VALUES ($1, $2)', [name, email]);
-    console.log(`User created with name ${name}, email ${email}, and id ${results.insertedId}`); // eslint-disable-line
+    Log.info(`User created with name ${name}, email ${email}, and id ${results.insertedId}`);
     return results.insertedId;
   } catch (error) {
-    console.log('error: ', error); // eslint-disable-line
+    Log.error(error);
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
@@ -42,9 +43,9 @@ const updateUser = async (id, name, email) => {
       'UPDATE wiki_user SET name = $1, email = $2 WHERE id = $3',
       [name, email, id],
     );
-    console.log(`User modified with ID: ${id}`); // eslint-disable-line
+    Log.info(`User modified with ID: ${id}`);
   } catch (error) {
-    console.log('error: ', error); // eslint-disable-line
+    Log.error(error);
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
@@ -52,9 +53,9 @@ const updateUser = async (id, name, email) => {
 const deleteUser = async (id) => {
   try {
     await DataBase.query('DELETE FROM wiki_user WHERE id = $1', [id]);
-    console.log(`User deleted with ID: ${id}`); // eslint-disable-line
+    Log.info(`User deleted with ID: ${id}`);
   } catch (error) {
-    console.log('error: ', error); // eslint-disable-line
+    Log.error(error);
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
