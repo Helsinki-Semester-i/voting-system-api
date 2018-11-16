@@ -73,3 +73,28 @@ FROM
     ) t
 ;
 
+SELECT
+    row_to_json(t)
+FROM
+    (
+        SELECT
+            *,
+            (
+                SELECT
+                    array_to_json(array_agg(row_to_json(r)))
+                FROM
+                    (
+                        SELECT
+                            *
+                        FROM
+                            anonymous_closed_response
+                        WHERE
+                            anonymous_ballot.id = anonymous_closed_response.ballot_id
+                    ) r
+            ) AS responses
+        FROM
+            anonymous_ballot
+        WHERE
+            unique_code='AB14Y'
+    ) t
+;
