@@ -81,6 +81,50 @@ FROM
             *,
             (
                 SELECT
+                    array_to_json(array_agg(row_to_json(q)))
+                FROM
+                    (
+                        SELECT
+                            question,
+                            (
+                                SELECT
+                                    array_to_json(array_agg(row_to_json(o)))
+                                FROM
+                                    (
+                                        SELECT
+                                            option_text,
+                                            vote_count
+                                        FROM
+                                            closed_poll_result
+                                        WHERE
+                                            poll_id = 4 AND closed_question.order_priority = question_order_priority
+                                        ORDER BY
+                                            order_priority
+                                    ) o
+                            ) AS options
+                        FROM
+                            closed_question
+                        WHERE
+                            poll_id = 4
+                        ORDER BY
+                            order_priority
+                    ) q
+            ) AS questions
+        FROM
+            poll
+        WHERE
+            id = 4
+    ) t
+;
+
+SELECT
+    row_to_json(t)
+FROM
+    (
+        SELECT
+            *,
+            (
+                SELECT
                     array_to_json(array_agg(row_to_json(r)))
                 FROM
                     (
