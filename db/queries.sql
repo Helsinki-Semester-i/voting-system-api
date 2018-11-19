@@ -1,3 +1,6 @@
+-- Hardcoded values are to be changed for parameters
+
+-- GET user
 SELECT
     row_to_json(t)
 FROM
@@ -30,6 +33,7 @@ FROM
     ) t
 ;
 
+-- GET poll
 SELECT
     row_to_json(t)
 FROM
@@ -73,6 +77,7 @@ FROM
     ) t
 ;
 
+-- GET result
 SELECT
     row_to_json(t)
 FROM
@@ -117,6 +122,7 @@ FROM
     ) t
 ;
 
+-- GET ballot
 SELECT
     row_to_json(t)
 FROM
@@ -144,7 +150,7 @@ FROM
                                                     (
                                                         SELECT
                                                             option_text,
-                                                            (closed_option.order_priority = anonymous_closed_response.option_priority) AS chosen
+                                                            (CASE WHEN closed_option.order_priority = anonymous_closed_response.option_priority THEN true ELSE false END) AS chosen
                                                         FROM
                                                             closed_option LEFT JOIN anonymous_closed_response
                                                                 ON closed_option.poll_id = anonymous_closed_response.poll_id
