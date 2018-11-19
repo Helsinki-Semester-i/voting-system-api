@@ -125,17 +125,53 @@ FROM
             *,
             (
                 SELECT
-                    array_to_json(array_agg(row_to_json(r)))
+                    row_to_json(p)
                 FROM
                     (
                         SELECT
-                            *
+                            *,
+                            (
+                                SELECT
+                                    array_to_json(array_agg(row_to_json(q)))
+                                FROM
+                                    (
+                                        SELECT
+                                            question,
+                                            (
+                                                SELECT
+                                                    array_to_json(array_agg(row_to_json(o)))
+                                                FROM
+                                                    (
+                                                        SELECT
+                                                            option_text,
+                                                            (closed_option.order_priority = anonymous_closed_response.option_priority) AS chosen
+                                                        FROM
+                                                            closed_option LEFT JOIN anonymous_closed_response
+                                                                ON closed_option.poll_id = anonymous_closed_response.poll_id
+                                                                    AND closed_option.poll_anonymity = anonymous_closed_response.poll_anonymity
+                                                                    AND closed_option.question_order_priority = anonymous_closed_response.poll_priority
+                                                        WHERE
+                                                            closed_option.poll_id = poll.id
+                                                            AND closed_question.order_priority = question_order_priority
+                                                            AND anonymous_closed_response.ballot_id = anonymous_ballot.id
+                                                        ORDER BY
+                                                            order_priority
+                                                    ) o
+                                            ) AS question_option
+                                        FROM
+                                            closed_question
+                                        WHERE
+                                            closed_question.poll_id = poll.id
+                                        ORDER BY
+                                            order_priority
+                                    ) q
+                            ) AS questions
                         FROM
-                            anonymous_closed_response
+                            poll
                         WHERE
-                            anonymous_ballot.id = anonymous_closed_response.ballot_id
-                    ) r
-            ) AS responses
+                            id = anonymous_ballot.poll_id
+                    ) p
+            ) AS poll
         FROM
             anonymous_ballot
         WHERE
