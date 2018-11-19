@@ -21,5 +21,8 @@
   "scripts": {
     "start": "node src/app.js",
     "test": "yarn --cwd ./test/ mocha"
+  },
+  "devDependencies": {
+    "pg-testdb": "^1.0.4"
   }
 }
