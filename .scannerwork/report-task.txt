@@ -1,8 +1,0 @@
-organization=andresbarroe-github
-projectKey=andresbarroe_voting-system-api
-serverUrl=https://sonarcloud.io
-serverVersion=7.4.0.18669
-branch=development
-dashboardUrl=https://sonarcloud.io/dashboard?id=andresbarroe_voting-system-api&branch=development&resolved=false
-ceTaskId=AWbQOwwS94ApvXY3ceyU
-ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AWbQOwwS94ApvXY3ceyU
