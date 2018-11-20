@@ -22,14 +22,14 @@ FROM
                                 FROM
                                     participation
                                 WHERE
-                                    wiki_user_id = 1
+                                    wiki_user_id = $1
                             ) p ON poll.id = p.poll_id
                     ) q
             ) AS polls
         FROM
             wiki_user
         WHERE
-            id = 1
+            id = $1
     ) t
 ;
 
@@ -57,7 +57,7 @@ FROM
                                         FROM
                                             closed_option
                                         WHERE
-                                            poll_id = 4 AND closed_question.order_priority = question_order_priority
+                                            poll_id = $1 AND closed_question.order_priority = question_order_priority
                                         ORDER BY
                                             order_priority
                                     ) o
@@ -65,7 +65,7 @@ FROM
                         FROM
                             closed_question
                         WHERE
-                            poll_id = 4
+                            poll_id = $1
                         ORDER BY
                             order_priority
                     ) q
@@ -73,7 +73,7 @@ FROM
         FROM
             poll
         WHERE
-            id = 4
+            id = $1
     ) t
 ;
 
@@ -102,7 +102,7 @@ FROM
                                         FROM
                                             closed_poll_result
                                         WHERE
-                                            poll_id = 4 AND closed_question.order_priority = question_order_priority
+                                            poll_id = $1 AND closed_question.order_priority = question_order_priority
                                         ORDER BY
                                             order_priority
                                     ) o
@@ -110,7 +110,7 @@ FROM
                         FROM
                             closed_question
                         WHERE
-                            poll_id = 4
+                            poll_id = $1
                         ORDER BY
                             order_priority
                     ) q
@@ -118,7 +118,7 @@ FROM
         FROM
             poll
         WHERE
-            id = 4
+            id = $1
     ) t
 ;
 
@@ -181,6 +181,6 @@ FROM
         FROM
             anonymous_ballot
         WHERE
-            unique_code='AB14Y'
+            unique_code=$1
     ) t
 ;
