@@ -43,8 +43,8 @@ const getUserById = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
-    const { name, email } = req.body;
-    const data = await userService.createUser(name, email);
+    const { first_name,last_name, email, phone } = req.body;
+    const data = await userService.createUser(first_name,last_name, email, phone);
     Log.info(`New user created with ID: ${data}`);
     res.status(CODES.STATUS.CREATED).send(`User created with ID: ${data}`);
   } catch (err) {
@@ -56,8 +56,8 @@ const updateUser = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
     const { id } = req.params;
-    const { name, email } = req.body;
-    await userService.createUser(id, name, email);
+    const { id, first_name, last_name, email, phone } = req.body;
+    await userService.createUser(id, first_name, last_name, email, phone);
     Log.info(`User modified with ID: ${id}`);
     res.status(CODES.STATUS.OK).send(`User modified with ID: ${id}`);
   } catch (err) {
