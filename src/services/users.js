@@ -50,7 +50,7 @@ FROM \
   try {
     const results = await DataBase.query(getUserByIdQuery, [id]);
     Log.info(`Request to get user with id: ${id}`);
-    return results.rows;
+    return results.rows[0].row_to_json;
   } catch (error) {
     Log.error(error);
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);

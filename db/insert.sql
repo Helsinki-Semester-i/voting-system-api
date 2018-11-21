@@ -16,6 +16,24 @@ INSERT INTO open_question( poll_anonymity,order_priority, question) VALUES(true,
 
 
 INSERT INTO closed_question( poll_anonymity,order_priority, question) VALUES(true,5,'traemos tokai?');
+INSERT INTO closed_question(poll_id, poll_anonymity, order_priority, question) VALUES (13, true, 1, 'Tokai');
+INSERT INTO closed_question(poll_id, poll_anonymity, order_priority, question) VALUES (13, true, 2, 'Okuma');
+INSERT INTO closed_question(poll_id, poll_anonymity, order_priority, question) VALUES (13, true, 3, 'Sushi Factory');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 1, 1, 'Muy en contra');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 1, 2, 'En contra');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 1, 3, 'Neutral');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 1, 4, 'A favor');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 1, 5, 'Muy a favor');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 2, 1, 'Muy en contra');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 2, 2, 'En contra');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 2, 3, 'Neutral');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 2, 4, 'A favor');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 2, 5, 'Muy a favor');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 3, 1, 'Muy en contra');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 3, 2, 'En contra');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 3, 3, 'Neutral');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 3, 4, 'A favor');
+INSERT INTO closed_option(poll_id, poll_anonymity, question_order_priority, order_priority, option_text) VALUES (13,true, 3, 5, 'Muy a favor');
 
 
 INSERT INTO closed_option( poll_anonymity,question_order_priority, order_priority,option_text) VALUES(true,5,,7,'esta mejor sushi factory');
