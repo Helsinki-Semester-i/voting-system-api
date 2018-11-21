@@ -43,8 +43,9 @@ const getPollById = async (req, res) => {
 const postPoll = async (req, res) => {
     try {
       throwErrorForQueryParams(req.query);
-      const { title, details, acceptance_percentage, anonimity } = req.body;
-      const data = await userService.postPoll(title, details, acceptance_percentage, anonimity);
+      const { title, details, creation_date, close_date, acceptance_percentage, anonymity } = req.body;
+      
+      const data = await userService.postPoll(title, details, creation_date, close_date, acceptance_percentage, anonymity);
       Log.info(`New poll created with ID: ${data}`);
       res.status(CODES.STATUS.CREATED).send(`Poll created with ID: ${data}`);
     } catch (err) {

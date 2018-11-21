@@ -56,7 +56,7 @@ const updateUser = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
     const { id } = req.params;
-    const { id, first_name, last_name, email, phone } = req.body;
+    const { first_name, last_name, email, phone } = req.body;
     await userService.createUser(id, first_name, last_name, email, phone);
     Log.info(`User modified with ID: ${id}`);
     res.status(CODES.STATUS.OK).send(`User modified with ID: ${id}`);

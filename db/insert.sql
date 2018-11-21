@@ -3,6 +3,11 @@ INSERT INTO wiki_user(first_name, last_name, email, phone) VALUES('andres','barr
 
 INSERT INTO poll(title, details, acceptance_percentage,anonymity) VALUES('votacion de comida','sushi o sushi','34%',true);
 
+INSERT INTO poll(title, details, creation_date, close_date, acceptance_percentage,anonymity) VALUES('votacion de comida2','sushi o sushi2',to_date('2018-12-02', 'YYYY-MM-DD'), to_date('2018-12-05', 'YYYY-MM-DD'),34,true);
+SELECT * FROM poll WHERE title = 'votacion de comida' AND details = 'sushi o sushi' AND creation_date = to_date('2018-12-01', 'YYYY-MM-DD') AND close_date = to_date('2018-12-03', 'YYYY-MM-DD');
+SELECT * FROM poll WHERE title = $1 AND details = $2;
+SELECT * FROM poll WHERE title = 'votacion de comida' AND details = 'sushi o sushi';
+
 
 INSERT INTO participation( poll_anonymity,vote_status) VALUES(true,'seen');
 
