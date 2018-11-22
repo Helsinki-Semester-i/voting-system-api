@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
-const queries = require('../services/votes.js');
+const votesController = require('../controllers/votes.js');
 
-router.get('/', queries.getVotes);
-router.get('/:id', queries.getVoteById);
-router.post('/', queries.postVote);
+//router.get('/', votesController.getVotes);
+router.get('/:code', votesController.getVoteByCode);
+//router.post('/', votesController.postVote);
 
 module.exports = router;

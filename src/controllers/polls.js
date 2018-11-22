@@ -47,7 +47,6 @@ const postPoll = async (req, res) => {
     
     const poll_id = await pollService.postPoll(title, details, creation_date, close_date, acceptance_percentage, anonymity);
     Log.info(`New poll created with ID: ${poll_id}`);
-    
     createClosed_question(poll_id, anonymity, questions);
     res.status(CODES.STATUS.CREATED).send(`Poll created with ID: ${poll_id}`);
   } catch (err) {
@@ -61,13 +60,13 @@ const createClosed_question = async(poll_id, anonymity, questions) =>{
     for (var x in questions){
       questionsLenght++;
     }
-    Log.info(`Creating ${questionsLenght} questions`);
+    //Log.info(`Creating ${questionsLenght} questions`);
     var priority;
     for(priority = 1; priority <= questionsLenght; priority++){
-      Log.info(`Creating question ${priority}`);
+      //Log.info(`Creating question ${priority}`);
       const question = questions[priority-1];
       await pollService.createClosed_question(poll_id, anonymity, priority, question.question);
-      Log.info(`New closed question created for poll with ID: ${poll_id}`);
+      //Log.info(`New closed question created for poll with ID: ${poll_id}`);
       createClosed_options(poll_id, anonymity, priority, question.options);
       //res.status(CODES.STATUS.CREATED).send(`Question ${priority} created for poll with ID ${poll_id}`);
     }
@@ -81,11 +80,11 @@ const createClosed_options = async(poll_id, anonymity, priority, options)=>{
   for (var y in options){
     optionsLenght++;
   }
-  Log.info(`Creating ${optionsLenght} options`);
+  //Log.info(`Creating ${optionsLenght} options`);
   var option_priority;
   for(option_priority=1; option_priority <= optionsLenght; option_priority++){
     await pollService.createClosed_option(poll_id, anonymity, priority, option_priority, options[option_priority-1].option_text);
-    Log.info(`New closed option created for poll with ID: ${poll_id}`);
+    //Log.info(`New closed option created for poll with ID: ${poll_id}`);
     //res.status(CODES.STATUS.CREATED).send(`Option created for poll with ID ${poll_id} and question ${priority}`);
   }
 }
