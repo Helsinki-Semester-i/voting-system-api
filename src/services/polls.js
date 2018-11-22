@@ -101,4 +101,4 @@ const createClosed_option = async (poll_id, poll_anonymity, question_order_prior
     }
 }
 
-module.exports = {getPolls, getPollById, postPoll}
+module.exports = {getPolls, getPollById, postPoll, createClosed_question, createClosed_option}
