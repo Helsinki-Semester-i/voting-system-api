@@ -16,9 +16,9 @@ router.use('/users', users);
 router.use('/oauth', oauth);
 router.use('/polls', polls);
 router.use('/votes', votes);
-router.use('/results', results); 
+router.use('/results', results);
 
-//ADD MORE ROUTES HERE
+// ADD MORE ROUTES HERE
 
 function errorHandler(err, req, res, next) {
   if (err.response) {
@@ -33,7 +33,7 @@ function errorHandler(err, req, res, next) {
     console.log('Error', err.message);
     res.json(err.message);
   }
-  console.log('Error config: ', err.config)
+  console.log('Error config: ', err.config);
 }
 
 router.use(errorHandler);
