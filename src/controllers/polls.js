@@ -44,11 +44,15 @@ const postPoll = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
     const { title, details, creation_date, close_date, acceptance_percentage, anonymity, questions} = req.body;
-    
-    const poll_id = await pollService.postPoll(title, details, creation_date, close_date, acceptance_percentage, anonymity);
-    Log.info(`New poll created with ID: ${poll_id}`);
-    createClosed_question(poll_id, anonymity, questions);
-    res.status(CODES.STATUS.CREATED).send(`Poll created with ID: ${poll_id}`);
+    if (anonymity){
+      const poll_id = await pollService.postPoll(title, details, creation_date, close_date, acceptance_percentage, anonymity);
+      Log.info(`New anonymous poll created with ID: ${poll_id}`);
+      createClosed_question(poll_id, anonymity, questions);
+      res.status(CODES.STATUS.CREATED).send(`Anonymous poll created with ID: ${poll_id}`);
+    }else{
+      Log.warn(`Non-anoymous poll creation still not supported`);
+      throw new Error(CODES.STATUS.BAD_REQUEST, 'Cannot create non-anoymous polls');
+    }
   } catch (err) {
     res.status(err.code).send({ error: err.msg });
   }

@@ -55,3 +55,31 @@ INSERT INTO anonymous_open_response( poll_anonymity,poll_priority,answer) VALUES
 
 
 INSERT INTO anonymous_closed_response( poll_anonymity,poll_priority,option_priority) VALUES(true,5,6);
+
+
+
+List of relations
+ Schema |           Name            |   Type   |  Owner
+--------+---------------------------+----------+----------
+ public | anonymous_ballot          | table    | postgres
+ public | anonymous_ballot_id_seq   | sequence | postgres
+ public | anonymous_closed_response | table    | postgres
+ public | anonymous_open_response   | table    | postgres
+ public | ballot                    | table    | postgres
+ public | ballot_id_seq             | sequence | postgres
+ public | closed_option             | table    | postgres
+ public | closed_question           | table    | postgres
+ public | closed_response           | table    | postgres
+ public | open_question             | table    | postgres
+ public | open_response             | table    | postgres
+ public | participation             | table    | postgres
+ public | poll                      | table    | postgres
+ public | poll_id_seq               | sequence | postgres
+ public | wiki_user                 | table    | postgres
+ public | wiki_user_id_seq          | sequence | postgres
+
+anonymous_ballot
+ id | poll_id | poll_anonymity | unique_code
+
+ anonymous_closed_response
+ ballot_id | poll_id | poll_anonymity | poll_priority | option_priority
