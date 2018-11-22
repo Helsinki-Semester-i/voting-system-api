@@ -95,9 +95,9 @@ const deleteUser = async (req, res, next) => {
 const errorHandler = (err, req, res, next) => { // eslint-disable-line
   if (err.response) {
     Log.error(`Okta response Error at API\n
-      Response error data: ${err.response.data}\n
+      Response error data: ${JSON.stringify(err.response.data)}\n
       Error Status: ${err.response.status}\n
-      Error Header: ${err.response.headers}
+      Error Header: ${JSON.stringify(err.response.headers)}
     `);
     res.status(err.response.status).json(err.response.data);
   } else if (err.request) {
@@ -107,7 +107,7 @@ const errorHandler = (err, req, res, next) => { // eslint-disable-line
     Log.error(`Okta unknown error: ${err.message}`);
     res.json(err.message);
   }
-  Log.warn(`Okta Error config: ${err.config}`); // eslint-disable-line
+  Log.warn(`Okta Error config: ${JSON.stringify(err.config)}`); // eslint-disable-line
 };
 
 module.exports = {

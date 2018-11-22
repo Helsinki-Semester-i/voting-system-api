@@ -8,7 +8,7 @@ router.use(oauth.addHeaders);
 router.get('/', oauth.getPanelists);
 router.get('/:login', oauth.getUserByMail);
 router.post('/', oauth.createUser);
-router.put('/:userId', oauth.deactivateUser, oauth.deleteUser);
+router.delete('/:userId', oauth.deactivateUser, oauth.deleteUser);
 router.use(oauth.errorHandler);
 
 module.exports = router;
