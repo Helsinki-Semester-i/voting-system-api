@@ -21,6 +21,21 @@ const getUsers = async (req, res) => {
   }
 };
 
+const getUserIdByEmail = async(req, res) =>{
+  try {
+    throwErrorForQueryParams(req.query);
+    const { email } = req.params;
+    const data = await userService.getUserIdByEmail(email);
+    if (utils.isEmptyArray(data)) {
+      Log.warn(`USer with email ${email} does not exist`);
+      throw new Error(CODES.STATUS.NOT_FOUND, 'Searched user does not exists');
+    }
+    res.status(CODES.STATUS.OK).json(data);
+  } catch (err) {
+    res.status(err.code).send({ error: err.msg });
+  }
+}
+
 const getUserById = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
@@ -80,6 +95,7 @@ const deleteUser = async (req, res) => {
 module.exports = {
   getUsers,
   getUserById,
+  getUserIdByEmail,
   createUser,
   updateUser,
   deleteUser,

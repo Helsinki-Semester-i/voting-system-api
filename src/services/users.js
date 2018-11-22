@@ -15,6 +15,21 @@ const getUsers = async () => {
   }
 };
 
+const getUserIdByEmail = async(email)=>{
+  try {
+    const results = await DataBase.query('SELECT id FROM wiki_user WHERE email = $1;', [email]);
+    Log.info('Request for user ID by email');
+    try{
+      return results.rows[0].id;
+    }catch(error){
+      return null;
+    } 
+  } catch (error) {
+    Log.error(error);
+    throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
+  }
+};
+
 const getUserById = async (id) => {
   const getUserByIdQuery = 'SELECT \
   row_to_json(t) \
@@ -95,6 +110,7 @@ const deleteUser = async (id) => {
 module.exports = {
   getUsers,
   getUserById,
+  getUserIdByEmail,
   createUser,
   updateUser,
   deleteUser,

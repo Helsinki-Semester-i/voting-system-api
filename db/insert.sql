@@ -83,3 +83,8 @@ anonymous_ballot
 
  anonymous_closed_response
  ballot_id | poll_id | poll_anonymity | poll_priority | option_priority
+
+ participation
+ wiki_user_id | poll_id | poll_anonymity | vote_status
+
+ 

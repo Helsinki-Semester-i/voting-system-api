@@ -11,7 +11,7 @@ function throwErrorForQueryParams(queryParams) {
     }
 }
 
-const getPollById = async (req, res) => {
+const getResultById = async (req, res) => {
     try {
       throwErrorForQueryParams(req.query);
       const { id } = req.params;

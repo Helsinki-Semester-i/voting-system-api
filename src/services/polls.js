@@ -71,9 +71,10 @@ FROM \
 const postPoll = async (title, details, creation_date, close_date, acceptance_percentage, anonymity) => {
     try {
         const format = 'YYYY-MM-DD';
-        const results = await DataBase.query('INSERT INTO poll(title, details,creation_date, close_date, acceptance_percentage,anonymity) VALUES($1,$2,to_date($3, $7), to_date($4, $7),$5,$6);', [title, details,creation_date, close_date, acceptance_percentage, anonymity, format]);
+        await DataBase.query('INSERT INTO poll(title, details,creation_date, close_date, acceptance_percentage,anonymity) VALUES($1,$2,to_date($3, $7), to_date($4, $7),$5,$6);', [title, details,creation_date, close_date, acceptance_percentage, anonymity, format]);
         Log.info(`Poll created with title ${title}`);
-        const id = await DataBase.query('SELECT * FROM poll WHERE title = $1 AND details = $2 AND creation_date = to_date($3, $5) AND close_date = to_date($4,$5);', [title, details, creation_date, close_date, format]);        return id.rows[0].id;
+        const id = await DataBase.query('SELECT * FROM poll WHERE title = $1 AND details = $2 AND creation_date = to_date($3, $5) AND close_date = to_date($4,$5);', [title, details, creation_date, close_date, format]);
+        return id.rows[0].id;
     } catch (error) {
         Log.error(error);
         throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
@@ -101,4 +102,15 @@ const createClosed_option = async (poll_id, poll_anonymity, question_order_prior
     }
 }
 
-module.exports = {getPolls, getPollById, postPoll, createClosed_question, createClosed_option}
+const addUsersToPoll = async (wiki_user_id, poll_id, poll_anonymity)=>{
+    try {
+        const initialStatus = 'not seen';
+        await DataBase.query('INSERT INTO participation(wiki_user_id, poll_id, poll_anonymity, vote_status) VALUES ($1,$2,$3,$4);', [wiki_user_id, poll_id, poll_anonymity, initialStatus]);
+        Log.info(`User ${wiki_user_id} added to poll ${poll_id}`);
+    } catch (error) {
+        Log.error(error);
+        throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
+    }
+}
+
+module.exports = {getPolls, getPollById, postPoll, createClosed_question, createClosed_option, addUsersToPoll}

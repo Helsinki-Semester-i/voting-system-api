@@ -1,4 +1,5 @@
 const pollService = require('../services/polls.js');
+const userService = require('../services/users.js');
 
 const Log = require('../utils/logger');
 const Error = require('../errors/statusError');
@@ -43,11 +44,24 @@ const getPollById = async (req, res) => {
 const postPoll = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
-    const { title, details, creation_date, close_date, acceptance_percentage, anonymity, questions} = req.body;
+    const { title, details, creation_date, close_date, acceptance_percentage, anonymity, questions, users} = req.body;
+
+    var usersIds = [];
+    for(var i in users){
+      var email = users[i];
+      var id = await userService.getUserIdByEmail(email);
+      if (id === null){
+        Log.warn(`One or more users does not exist`);
+        throw new Error(CODES.STATUS.BAD_REQUEST, 'Cannot create non-anoymous poll');
+      }
+      usersIds.push(id);
+    }
+
     if (anonymity){
       const poll_id = await pollService.postPoll(title, details, creation_date, close_date, acceptance_percentage, anonymity);
       Log.info(`New anonymous poll created with ID: ${poll_id}`);
       createClosed_question(poll_id, anonymity, questions);
+      addUsersToPoll(usersIds,poll_id,anonymity);
       res.status(CODES.STATUS.CREATED).send(`Anonymous poll created with ID: ${poll_id}`);
     }else{
       Log.warn(`Non-anoymous poll creation still not supported`);
@@ -90,6 +104,12 @@ const createClosed_options = async(poll_id, anonymity, priority, options)=>{
     await pollService.createClosed_option(poll_id, anonymity, priority, option_priority, options[option_priority-1].option_text);
     //Log.info(`New closed option created for poll with ID: ${poll_id}`);
     //res.status(CODES.STATUS.CREATED).send(`Option created for poll with ID ${poll_id} and question ${priority}`);
+  }
+}
+
+const addUsersToPoll = async(usersIds, poll_id, anonymity)=>{
+  for(var i in usersIds ){
+    await pollService.addUsersToPoll(usersIds[i], poll_id, anonymity);
   }
 }
   
