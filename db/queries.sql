@@ -53,7 +53,8 @@ FROM
                                 FROM
                                     (
                                         SELECT
-                                            option_text
+                                            option_text, 
+                                            order_priority
                                         FROM
                                             closed_option
                                         WHERE

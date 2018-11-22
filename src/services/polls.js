@@ -29,13 +29,15 @@ FROM \
                     ( \
                         SELECT \
                             question, \
+                            order_priority, \
                             ( \
                                 SELECT \
                                     array_to_json(array_agg(row_to_json(o))) \
                                 FROM \
                                     ( \
                                         SELECT \
-                                            option_text \
+                                            option_text, \
+                                            order_priority \
                                         FROM \
                                             closed_option \
                                         WHERE \

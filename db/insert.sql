@@ -11,9 +11,7 @@ SELECT * FROM poll WHERE title = 'votacion de comida' AND details = 'sushi o sus
 
 INSERT INTO participation( poll_anonymity,vote_status) VALUES(true,'seen');
 
-
 INSERT INTO open_question( poll_anonymity,order_priority, question) VALUES(true,3,'traemos sushi factory?');
-
 
 INSERT INTO closed_question( poll_anonymity,order_priority, question) VALUES(true,5,'traemos tokai?');
 INSERT INTO closed_question(poll_id, poll_anonymity, order_priority, question) VALUES (13, true, 1, 'Tokai');
@@ -87,4 +85,13 @@ anonymous_ballot
  participation
  wiki_user_id | poll_id | poll_anonymity | vote_status
 
- 
+anonymous_closed_response
+ ballot_id | poll_id | poll_anonymity | poll_priority | option_priority
+
+ INSERT INTO anonymous_ballot(poll_id,poll_anonymity,unique_code) VALUES(1, true, 'FHD42GY4');
+
+INSERT INTO anonymous_closed_response(ballot_id,poll_id,poll_anonymity,poll_priority,option_priority)VALUES(1,1,true,1,2);
+INSERT INTO anonymous_closed_response(ballot_id,poll_id,poll_anonymity,poll_priority,option_priority)VALUES(1,1,true,2,3);
+INSERT INTO anonymous_closed_response(ballot_id,poll_id,poll_anonymity,poll_priority,option_priority)VALUES(1,1,true,3,4);
+INSERT INTO anonymous_closed_response(ballot_id,poll_id,poll_anonymity,poll_priority,option_priority)VALUES(1,1,true,4,5) ;
+INSERT INTO anonymous_closed_response(ballot_id,poll_id,poll_anonymity,poll_priority,option_priority)VALUES(1,1,true,5,1);

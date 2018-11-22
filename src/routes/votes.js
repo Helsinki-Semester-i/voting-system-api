@@ -2,8 +2,7 @@ var express = require('express');
 var router = express.Router();
 const votesController = require('../controllers/votes.js');
 
-//router.get('/', votesController.getVotes);
-router.get('/:code', votesController.getVoteByCode);
-//router.post('/', votesController.postVote);
+router.get('/:code', votesController.getAnonymousVoteByCode);
+router.post('/', votesController.postAnonymousVote);
 
 module.exports = router;

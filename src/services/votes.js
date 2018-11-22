@@ -4,11 +4,7 @@ const Log = require('../utils/logger');
 const Error = require('../errors/statusError');
 const CODES = require('../constants/httpCodes');
 
-const getVotes = async() => {
-    response.status(200);
-}
-
-const getVoteByCode = async(code) => {
+const getAnonymousVoteByCode = async(code) => {
     const getVoteByCodeQuery = 'SELECT \
     row_to_json(t) \
 FROM \
@@ -80,8 +76,46 @@ FROM \
     }
 }
 
-const postVote = async() => {
-    response.status(200);
+const postAnonymousVote = async(poll_id,poll_anonymity, questions) => {
+    function makeid() {
+        let text = "";
+        const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      
+        for (let i = 0; i < 8; i++)
+          text += possible.charAt(Math.floor(Math.random() * possible.length));
+      
+        return text;
+    }
+    try {
+        const code = makeid();
+        await DataBase.query('INSERT INTO anonymous_ballot(poll_id,poll_anonymity,unique_code) VALUES($1,$2,$3);', [poll_id,poll_anonymity,code]);
+        Log.info(`Anonymous ballot created with code: ${code}`);
+        const data = await DataBase.query('SELECT * FROM anonymous_ballot WHERE unique_code = $1;', [code]);
+        const id = data.rows[0].id;
+        //CREATE ALL THE RESPONSES
+        await createAnonymous_closed_response(id, poll_id, poll_anonymity, questions);
+
+        //TODO --  UPDATE STATUS
+        return code;
+    } catch (error) {
+        Log.error(error);
+        throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
+    }
 }
 
-module.exports = {getVotes, getVoteByCode, postVote}
+const createAnonymous_closed_response = async(ballot_id, poll_id, poll_anonymity, questions)=>{
+    try {
+        for(let i in questions){
+            const question_priority = questions[i].order_priority;
+            const response = questions[i].response;
+            await DataBase.query('INSERT INTO anonymous_closed_response(ballot_id,poll_id,poll_anonymity,poll_priority,option_priority)VALUES($1,$2,$3,$4,$5);',
+             [ballot_id,poll_id,poll_anonymity,question_priority,response]);
+        }
+        Log.info(`Responses created for anonymous ballot with id: ${ballot_id}`);
+    } catch (error) {
+        Log.error(error);
+        throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
+    }
+}
+
+module.exports = {getAnonymousVoteByCode, postAnonymousVote}
