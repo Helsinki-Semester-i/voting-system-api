@@ -20,7 +20,7 @@
   "scripts": {
     "start": "node src/app.js",
     "test": "node .",
-    "lint": "./node_modules/.bin/eslint"
+    "lint": "./node_modules/.bin/eslint ./src --fix"
   },
   "devDependencies": {
     "eslint": "^5.9.0",
