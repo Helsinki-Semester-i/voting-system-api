@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const DataBase = require('./database.js');
 
 const Log = require('../utils/logger');
@@ -5,6 +6,7 @@ const Error = require('../errors/statusError');
 const CODES = require('../constants/httpCodes');
 
 const getAnonymousVoteByCode = async (code) => {
+  // eslint-disable-next-line no-multi-str
   const getVoteByCodeQuery = 'SELECT \
     row_to_json(t) \
 FROM \
@@ -71,7 +73,7 @@ FROM \
     Log.info(`Request to ballot with code: ${code}`);
     return results.rows[0].row_to_json;
   } catch (error) {
-    Log.error(error);
+    Log.error(JSON.stringify(error));
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
@@ -81,7 +83,9 @@ const postAnonymousVote = async (poll_id, poll_anonymity, questions) => {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    for (let i = 0; i < 8; i++) { text += possible.charAt(Math.floor(Math.random() * possible.length)); }
+    for (let i = 0; i < 8; i += 1) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
 
     return text;
   }
@@ -90,18 +94,20 @@ const postAnonymousVote = async (poll_id, poll_anonymity, questions) => {
     await DataBase.query('INSERT INTO anonymous_ballot(poll_id,poll_anonymity,unique_code) VALUES($1,$2,$3);', [poll_id, poll_anonymity, code]);
     Log.info(`Anonymous ballot created with code: ${code}`);
     const data = await DataBase.query('SELECT * FROM anonymous_ballot WHERE unique_code = $1;', [code]);
-    const id = data.rows[0].id;
+    const { id } = data.rows[0];
     // CREATE ALL THE RESPONSES
+    // eslint-disable-next-line no-use-before-define
     await createAnonymous_closed_response(id, poll_id, poll_anonymity, questions);
 
-    // TODO --  UPDATE STATUS
+    // TODO: --  UPDATE STATUS
     return code;
   } catch (error) {
-    Log.error(error);
+    Log.error(JSON.stringify(error));
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
 
+/* eslint-disable */
 const createAnonymous_closed_response = async (ballot_id, poll_id, poll_anonymity, questions) => {
   try {
     for (const i in questions) {
@@ -112,7 +118,7 @@ const createAnonymous_closed_response = async (ballot_id, poll_id, poll_anonymit
     }
     Log.info(`Responses created for anonymous ballot with id: ${ballot_id}`);
   } catch (error) {
-    Log.error(error);
+    Log.error(JSON.stringify(error));
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };

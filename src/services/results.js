@@ -57,7 +57,7 @@ FROM \
     Log.info(`Request to results for poll with id: ${poll_id}`);
     return results.rows[0].row_to_json;
   } catch (error) {
-    Log.error(error);
+    Log.error(JSON.stringify(error));
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
