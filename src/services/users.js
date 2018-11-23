@@ -15,33 +15,80 @@ const getUsers = async () => {
   }
 };
 
+const getUserIdByEmail = async(email)=>{
+  try {
+    const results = await DataBase.query('SELECT id FROM wiki_user WHERE email = $1;', [email]);
+    Log.info('Request for user ID by email');
+    try{
+      return results.rows[0].id;
+    }catch(error){
+      return null;
+    } 
+  } catch (error) {
+    Log.error(error);
+    throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
+  }
+};
+
 const getUserById = async (id) => {
+  const getUserByIdQuery = 'SELECT \
+  row_to_json(t) \
+FROM \
+  ( \
+      SELECT \
+          *, \
+          ( \
+              SELECT \
+                  array_to_json(array_agg(row_to_json(q))) \
+              FROM \
+                  ( \
+                      SELECT \
+                          poll.*, \
+                          p.vote_status \
+                      FROM \
+                          poll JOIN ( \
+                              SELECT \
+                                  * \
+                              FROM \
+                                  participation \
+                              WHERE \
+                                  wiki_user_id = $1 \
+                          ) p ON poll.id = p.poll_id \
+                  ) q \
+          ) AS polls \
+      FROM \
+          wiki_user \
+      WHERE \
+          id = $1 \
+  ) t \
+;'
   try {
-    const results = await DataBase.query('SELECT * FROM wiki_user WHERE id = $1', [id]);
+    const results = await DataBase.query(getUserByIdQuery, [id]);
     Log.info(`Request to get user with id: ${id}`);
-    return results.rows;
+    return results.rows[0].row_to_json;
   } catch (error) {
     Log.error(error);
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
 
-const createUser = async (name, email) => {
+const createUser = async (first_name,last_name, email, phone) => {
   try {
-    const results = await DataBase.query('INSERT INTO wiki_user (name, email) VALUES ($1, $2)', [name, email]);
-    Log.info(`User created with name ${name}, email ${email}, and id ${results.insertedId}`);
-    return results.insertedId;
+    const results = await DataBase.query('INSERT INTO wiki_user (first_name,last_name, email, phone) VALUES ($1,$2,$3,$4)', [first_name,last_name, email, phone]);
+    Log.info(`User created with name ${first_name} ${last_name} and email ${email}`);
+    const id = await DataBase.query('SELECT * FROM wiki_user WHERE email = $1', [email])
+    return id.rows[0].id;
   } catch (error) {
     Log.error(error);
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
 };
 
-const updateUser = async (id, name, email) => {
+const updateUser = async (id, first_name, last_name, email, phone) => {
   try {
     await DataBase.query(
-      'UPDATE wiki_user SET name = $1, email = $2 WHERE id = $3',
-      [name, email, id],
+      'UPDATE wiki_user SET first_name = $2, last_name = $3, email = $4, phone = $5 WHERE id = $1',
+      [id, first_name, last_name, email, phone],
     );
     Log.info(`User modified with ID: ${id}`);
   } catch (error) {
@@ -63,6 +110,7 @@ const deleteUser = async (id) => {
 module.exports = {
   getUsers,
   getUserById,
+  getUserIdByEmail,
   createUser,
   updateUser,
   deleteUser,

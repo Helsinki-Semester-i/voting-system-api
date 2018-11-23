@@ -1,10 +1,9 @@
-const express = require('express');
+var express = require('express');
+var router = express.Router();
+const resultsController = require('../controllers/results.js');
 
-const router = express.Router();
-const queries = require('../services/results.js');
-
-router.get('/', queries.getResults);
-router.get('/:id', queries.getResultById);
-router.post('/', queries.postResult);
+//router.get('/', resultsController.getResults);
+router.get('/:id', resultsController.getResultById);
+//router.post('/', resultsController.postResult);
 
 module.exports = router;

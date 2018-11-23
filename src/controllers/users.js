@@ -21,6 +21,21 @@ const getUsers = async (req, res) => {
   }
 };
 
+const getUserIdByEmail = async(req, res) =>{
+  try {
+    throwErrorForQueryParams(req.query);
+    const { email } = req.params;
+    const data = await userService.getUserIdByEmail(email);
+    if (utils.isEmptyArray(data)) {
+      Log.warn(`USer with email ${email} does not exist`);
+      throw new Error(CODES.STATUS.NOT_FOUND, 'Searched user does not exists');
+    }
+    res.status(CODES.STATUS.OK).json(data);
+  } catch (err) {
+    res.status(err.code).send({ error: err.msg });
+  }
+}
+
 const getUserById = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
@@ -43,8 +58,8 @@ const getUserById = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
-    const { name, email } = req.body;
-    const data = await userService.createUser(name, email);
+    const { first_name,last_name, email, phone } = req.body;
+    const data = await userService.createUser(first_name,last_name, email, phone);
     Log.info(`New user created with ID: ${data}`);
     res.status(CODES.STATUS.CREATED).send(`User created with ID: ${data}`);
   } catch (err) {
@@ -56,8 +71,8 @@ const updateUser = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
     const { id } = req.params;
-    const { name, email } = req.body;
-    await userService.createUser(id, name, email);
+    const { first_name, last_name, email, phone } = req.body;
+    await userService.createUser(id, first_name, last_name, email, phone);
     Log.info(`User modified with ID: ${id}`);
     res.status(CODES.STATUS.OK).send(`User modified with ID: ${id}`);
   } catch (err) {
@@ -80,6 +95,7 @@ const deleteUser = async (req, res) => {
 module.exports = {
   getUsers,
   getUserById,
+  getUserIdByEmail,
   createUser,
   updateUser,
   deleteUser,

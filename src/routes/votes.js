@@ -1,10 +1,8 @@
-const express = require('express');
+var express = require('express');
+var router = express.Router();
+const votesController = require('../controllers/votes.js');
 
-const router = express.Router();
-const queries = require('../services/votes.js');
-
-router.get('/', queries.getVotes);
-router.get('/:id', queries.getVoteById);
-router.post('/', queries.postVote);
+router.get('/:code', votesController.getAnonymousVoteByCode);
+router.post('/', votesController.postAnonymousVote);
 
 module.exports = router;
