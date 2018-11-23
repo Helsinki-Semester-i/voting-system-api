@@ -27,10 +27,11 @@ const getUserIdByEmail = async (req, res) => {
     const { email } = req.params;
     const data = await userService.getUserIdByEmail(email);
     if (utils.isEmptyArray(data)) {
-      Log.warn(`USer with email ${email} does not exist`);
+      Log.warn(`User with email ${email} does not exist`);
       throw new Error(CODES.STATUS.NOT_FOUND, 'Searched user does not exists');
     }
-    res.status(CODES.STATUS.OK).json(data);
+    const userId = data[0];
+    res.status(CODES.STATUS.OK).json(userId);
   } catch (err) {
     res.status(err.code).send({ error: err.msg });
   }
@@ -49,7 +50,8 @@ const getUserById = async (req, res) => {
       Log.warn(`Non existent user was requested with id: ${id}`);
       throw new Error(CODES.STATUS.NOT_FOUND, 'User does not exists');
     }
-    res.status(CODES.STATUS.OK).json(data);
+    const userData = data[0].row_to_json;
+    res.status(CODES.STATUS.OK).json(userData);
   } catch (err) {
     res.status(err.code).send({ error: err.msg });
   }
