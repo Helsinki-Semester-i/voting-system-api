@@ -4,12 +4,12 @@ const Log = require('../utils/logger');
 const Error = require('../errors/statusError');
 const CODES = require('../constants/httpCodes');
 
-const getResults = async() => {
-    response.status(200);
-}
+const getResults = async () => {
+  response.status(200);
+};
 
-const getResultById = async(poll_id) => {
-    const getResultByIdQuery = 'SELECT \
+const getResultById = async (poll_id) => {
+  const getResultByIdQuery = 'SELECT \
     row_to_json(t) \
 FROM \
     ( \
@@ -51,7 +51,7 @@ FROM \
         WHERE \
             id = $1 \
     ) t \
-;'
+;';
   try {
     const results = await DataBase.query(getResultByIdQuery, [poll_id]);
     Log.info(`Request to results for poll with id: ${poll_id}`);
@@ -60,10 +60,10 @@ FROM \
     Log.error(error);
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
   }
-}
+};
 
-const postResult = async() => {
-    response.status(200);
-}
+const postResult = async () => {
+  response.status(200);
+};
 
 module.exports = { getResults, getResultById, postResult };
