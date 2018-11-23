@@ -52,7 +52,7 @@ const postPoll = async (req, res) => {
       var id = await userService.getUserIdByEmail(email);
       if (id === null){
         Log.warn(`One or more users does not exist`);
-        throw new Error(CODES.STATUS.BAD_REQUEST, 'Cannot create non-anoymous poll');
+        throw new Error(CODES.STATUS.BAD_REQUEST, 'Cannot create anoymous poll, one or more users does not exist.');
       }
       usersIds.push(id);
     }
