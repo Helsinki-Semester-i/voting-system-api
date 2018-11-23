@@ -65,8 +65,9 @@ const createUser = async (req, res) => {
       first_name, last_name, email, phone,
     } = req.body;
     const data = await userService.createUser(first_name, last_name, email, phone);
-    Log.info(`New user created with ID: ${data}`);
-    res.status(CODES.STATUS.CREATED).send(`User created with ID: ${data}`);
+    const newUser = data[0];
+    Log.warn(`New wiki user created: ${JSON.stringify(newUser)}`);
+    res.status(CODES.STATUS.CREATED).json(newUser);
   } catch (err) {
     res.status(err.code).send({ error: err.msg });
   }
@@ -92,7 +93,7 @@ const deleteUser = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
     const { id } = req.params;
-    await userService.createUser(id);
+    await userService.deleteUser(id);
     Log.info(`User deleted with ID: ${id}`);
     res.status(CODES.STATUS.OK).send(`User deleted with ID: ${id}`);
   } catch (err) {

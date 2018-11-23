@@ -25,6 +25,7 @@ const createUser = async (req, res, next) => {
       params: req.query,
       headers: req.oktaHeaders,
     });
+    Log.warn(`Okta User created: ${JSON.stringify(data)}`);
     res.json(data);
   } catch (err) {
     next(err);

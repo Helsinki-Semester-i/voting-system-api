@@ -73,9 +73,9 @@ FROM \
 const createUser = async (first_name, last_name, email, phone) => {
   try {
     await DataBase.query('INSERT INTO wiki_user (first_name,last_name, email, phone) VALUES ($1,$2,$3,$4)', [first_name, last_name, email, phone]);
-    Log.info(`User created with name ${first_name} ${last_name} and email ${email}`);
+    Log.info('Request to create new Wiki user');
     const id = await DataBase.query('SELECT * FROM wiki_user WHERE email = $1', [email]);
-    return id.rows[0].id;
+    return id.rows;
   } catch (error) {
     Log.error(JSON.stringify(error));
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
