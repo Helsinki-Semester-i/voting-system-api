@@ -1,16 +1,9 @@
 const pollService = require('../services/polls.js');
 const userService = require('../services/users.js');
 
-const Log = require('../utils/logger');
-const Error = require('../errors/statusError');
-const utils = require('../utils/utils.js');
-const CODES = require('../constants/httpCodes');
-
-function throwErrorForQueryParams(queryParams) {
-  if (!utils.isEmptyObject(queryParams)) {
-    throw new Error(CODES.STATUS.BAD_REQUEST, 'Query params are not supported yet');
-  }
-}
+const {
+  Log, CODES, utils, throwErrorForQueryParams, Error,
+} = require('./validationUtils');
 
 const getPolls = async (req, res) => {
   try {

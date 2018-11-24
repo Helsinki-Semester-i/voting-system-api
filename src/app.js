@@ -1,28 +1,28 @@
-// BASE SETUP =============================================================================
-
+// BASE SETUP
 require('dotenv').config();
 const express = require('express');
-
-// call express
-const app = express(); // define our app using express
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const helmet = require('helmet');
+const expressValidator = require('express-validator');
+
+const app = express();
 
 const port = process.env.PORT;
 const routes = require('./routes/index.js');
 const authMiddleware = require('./auth'); // eslint-disable-line
 
-// configure app to use bodyParser()
-// this will let us get the data from a POST
+app.use(cors());
+app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
-// app.use(authMiddleware);
+// app.use(authMiddleware); // TODO: remove comment for production
+app.use(expressValidator());
 
-// ROUTES FOR OUR API =============================================================================
+// ROUTES FOR OUR API
 app.use('/', routes);
 
-// START THE SERVER =============================================================================
+// START THE SERVER
 app.listen(port, () => {
   console.log(`App running on port ${port}.`); // eslint-disable-line
 });

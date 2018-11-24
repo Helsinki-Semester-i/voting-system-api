@@ -1,15 +1,59 @@
+const { body, param, validationResult } = require('express-validator/check');
 const userService = require('../services/users.js');
 
-const Log = require('../utils/logger');
-const Error = require('../errors/statusError');
-const utils = require('../utils/utils.js');
-const CODES = require('../constants/httpCodes');
+const {
+  Log, CODES, utils, throwErrorForQueryParams, checkValidationResult, Error,
+} = require('./validationUtils');
 
-function throwErrorForQueryParams(queryParams) {
-  if (!utils.isEmptyObject(queryParams)) {
-    throw new Error(CODES.STATUS.BAD_REQUEST, 'Query params are not supported yet');
+const validate = (method) => {
+  switch (method) {
+    case 'getUserIdByEmail': {
+      return [
+        param('email').isEmail().withMessage('Invalid email'),
+      ];
+    }
+    case 'getUserById':
+    case 'deleteUser': {
+      return [
+        param('id').isInt({ gt: 0 }).withMessage('Invalid user Id'),
+      ];
+    }
+    case 'createUser': {
+      return [
+        body('first_name')
+          .exists().withMessage('First name required'),
+        body('last_name')
+          .exists().withMessage('Last name required'),
+        body('email')
+          .exists().withMessage('email required')
+          .isEmail()
+          .withMessage('Invalid email'),
+        body('phone')
+          .exists().withMessage('Phone required')
+          .isMobilePhone()
+          .withMessage('Invalid phone'),
+      ];
+    }
+    case 'updateUser': {
+      return [
+        body('first_name')
+          .exists().withMessage('First name required'),
+        body('last_name')
+          .exists().withMessage('Last name required'),
+        body('email')
+          .exists().withMessage('email required')
+          .isEmail()
+          .withMessage('Invalid email'),
+        body('phone')
+          .exists().withMessage('Phone required')
+          .isMobilePhone()
+          .withMessage('Invalid phone'),
+        param('id').isInt({ gt: 0 }).withMessage('Invalid user Id'),
+      ];
+    }
+    default: return [];
   }
-}
+};
 
 const getUsers = async (req, res) => {
   try {
@@ -24,6 +68,7 @@ const getUsers = async (req, res) => {
 const getUserIdByEmail = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
+    checkValidationResult(validationResult(req));
     const { email } = req.params;
     const data = await userService.getUserIdByEmail(email);
     if (utils.isEmptyArray(data)) {
@@ -40,11 +85,8 @@ const getUserIdByEmail = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
+    checkValidationResult(validationResult(req));
     const { id } = req.params;
-    if (!utils.isPositiveInteger(id)) {
-      Log.warn(`Invalid Id = (${id}) was used to request an user by ID`);
-      throw new Error(CODES.STATUS.BAD_REQUEST, 'Invalid user ID');
-    }
     const data = await userService.getUserById(id);
     if (utils.isEmptyArray(data)) {
       Log.warn(`Non existent user was requested with id: ${id}`);
@@ -60,6 +102,7 @@ const getUserById = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
+    checkValidationResult(validationResult(req));
     const {
       // eslint-disable-next-line camelcase
       first_name, last_name, email, phone,
@@ -76,6 +119,7 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
+    checkValidationResult(validationResult(req));
     const { id } = req.params;
     const {
       // eslint-disable-next-line camelcase
@@ -92,6 +136,7 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
+    checkValidationResult(validationResult(req));
     const { id } = req.params;
     await userService.deleteUser(id);
     Log.info(`User deleted with ID: ${id}`);
@@ -102,6 +147,7 @@ const deleteUser = async (req, res) => {
 };
 
 module.exports = {
+  validate,
   getUsers,
   getUserById,
   getUserIdByEmail,
