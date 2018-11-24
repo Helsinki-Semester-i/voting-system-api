@@ -1,8 +1,9 @@
 const { body, param, validationResult } = require('express-validator/check');
 const userService = require('../services/users.js');
 
-// utils
-const valUtils = require('./validationUtils');
+const {
+  Log, CODES, helper, throwErrorForQueryParams, checkValidationResult,
+} = require('./validationUtils');
 
 const validate = (method) => {
   switch (method) {
@@ -56,9 +57,9 @@ const validate = (method) => {
 
 const getUsers = async (req, res) => {
   try {
-    valUtils.throwErrorForQueryParams(req.query);
+    throwErrorForQueryParams(req.query);
     const data = await userService.getUsers();
-    res.status(valUtils.CODES.STATUS.OK).json(data);
+    res.status(CODES.STATUS.OK).json(data);
   } catch (err) {
     res.status(err.code).send({ error: err.msg });
   }
@@ -66,16 +67,16 @@ const getUsers = async (req, res) => {
 
 const getUserIdByEmail = async (req, res) => {
   try {
-    valUtils.throwErrorForQueryParams(req.query);
-    valUtils.checkValidationResult(validationResult(req));
+    throwErrorForQueryParams(req.query);
+    checkValidationResult(validationResult(req));
     const { email } = req.params;
     const data = await userService.getUserIdByEmail(email);
-    if (valUtils.helper.isEmptyArray(data)) {
-      valUtils.Log.warn(`User with email ${email} does not exist`);
-      throw new Error(valUtils.CODES.STATUS.NOT_FOUND, 'Searched user does not exists');
+    if (helper.isEmptyArray(data)) {
+      Log.warn(`User with email ${email} does not exist`);
+      throw new Error(CODES.STATUS.NOT_FOUND, 'Searched user does not exists');
     }
     const userId = data[0];
-    res.status(valUtils.CODES.STATUS.OK).json(userId);
+    res.status(CODES.STATUS.OK).json(userId);
   } catch (err) {
     res.status(err.code).send({ error: err.msg });
   }
@@ -83,16 +84,16 @@ const getUserIdByEmail = async (req, res) => {
 
 const getUserById = async (req, res) => {
   try {
-    valUtils.throwErrorForQueryParams(req.query);
-    valUtils.checkValidationResult(validationResult(req));
+    throwErrorForQueryParams(req.query);
+    checkValidationResult(validationResult(req));
     const { id } = req.params;
     const data = await userService.getUserById(id);
-    if (valUtils.helper.isEmptyArray(data)) {
-      valUtils.Log.warn(`Non existent user was requested with id: ${id}`);
-      throw new Error(valUtils.CODES.STATUS.NOT_FOUND, 'User does not exists');
+    if (helper.isEmptyArray(data)) {
+      Log.warn(`Non existent user was requested with id: ${id}`);
+      throw new Error(CODES.STATUS.NOT_FOUND, 'User does not exists');
     }
     const userData = data[0].row_to_json;
-    res.status(valUtils.CODES.STATUS.OK).json(userData);
+    res.status(CODES.STATUS.OK).json(userData);
   } catch (err) {
     res.status(err.code).send({ error: err.msg });
   }
@@ -100,16 +101,16 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    valUtils.throwErrorForQueryParams(req.query);
-    valUtils.checkValidationResult(validationResult(req));
+    throwErrorForQueryParams(req.query);
+    checkValidationResult(validationResult(req));
     const {
       // eslint-disable-next-line camelcase
       first_name, last_name, email, phone,
     } = req.body;
     const data = await userService.createUser(first_name, last_name, email, phone);
     const newUser = data[0];
-    valUtils.Log.warn(`New wiki user created: ${JSON.stringify(newUser)}`);
-    res.status(valUtils.CODES.STATUS.CREATED).json(newUser);
+    Log.warn(`New wiki user created: ${JSON.stringify(newUser)}`);
+    res.status(CODES.STATUS.CREATED).json(newUser);
   } catch (err) {
     res.status(err.code).send({ error: err.msg });
   }
@@ -117,16 +118,16 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    valUtils.throwErrorForQueryParams(req.query);
-    valUtils.checkValidationResult(validationResult(req));
+    throwErrorForQueryParams(req.query);
+    checkValidationResult(validationResult(req));
     const { id } = req.params;
     const {
       // eslint-disable-next-line camelcase
       first_name, last_name, email, phone,
     } = req.body;
     await userService.createUser(id, first_name, last_name, email, phone);
-    valUtils.Log.info(`User modified with ID: ${id}`);
-    res.status(valUtils.CODES.STATUS.OK).send(`User modified with ID: ${id}`);
+    Log.info(`User modified with ID: ${id}`);
+    res.status(CODES.STATUS.OK).send(`User modified with ID: ${id}`);
   } catch (err) {
     res.status(err.code).send({ error: err.msg });
   }
@@ -134,12 +135,12 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    valUtils.throwErrorForQueryParams(req.query);
-    valUtils.checkValidationResult(validationResult(req));
+    throwErrorForQueryParams(req.query);
+    checkValidationResult(validationResult(req));
     const { id } = req.params;
     await userService.deleteUser(id);
-    valUtils.Log.info(`User deleted with ID: ${id}`);
-    res.status(valUtils.CODES.STATUS.OK).send(`User deleted with ID: ${id}`);
+    Log.info(`User deleted with ID: ${id}`);
+    res.status(CODES.STATUS.OK).send(`User deleted with ID: ${id}`);
   } catch (err) {
     res.status(err.code).send({ error: err.msg });
   }
