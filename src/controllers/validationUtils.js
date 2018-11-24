@@ -12,7 +12,7 @@ const throwErrorForQueryParams = (queryParams) => {
 const checkValidationResult = (errors) => {
   if (!errors.isEmpty()) {
     Log.error(JSON.stringify(errors.array()));
-    throw new Error(CODES.STATUS.BAD_REQUEST, errors.array());
+    throw new Error(CODES.STATUS.BAD_REQUEST, errors.array().map(key => `${key.msg} : ${key.value}`));
   }
 };
 
