@@ -1,13 +1,21 @@
+const { param, validationResult } = require('express-validator/check');
 const pollService = require('../services/polls.js');
 const userService = require('../services/users.js');
 
 const {
-  Log, CODES, utils, throwErrorForQueryParams, Error,
+  Log, CODES, utils, throwErrorForQueryParams, Error, checkValidationResult,
 } = require('./validationUtils');
+
+const validate = (method) => {
+  switch (method) {
+    default: return [];
+  }
+};
 
 const getPolls = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
+    // checkValidationResult(validationResult(req));
     const data = await pollService.getPolls();
     res.status(CODES.STATUS.OK).json(data);
   } catch (err) {
@@ -108,4 +116,4 @@ const addUsersToPoll = async (usersIds, poll_id, anonymity) => {
   }
 };
 
-module.exports = { getPolls, getPollById, postPoll };
+module.exports = { validate, getPolls, getPollById, postPoll };
