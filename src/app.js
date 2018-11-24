@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
+const expressValidator = require('express-validator');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // app.use(authMiddleware); // TODO: remove comment for production
+app.use(expressValidator());
 
 // ROUTES FOR OUR API
 app.use('/', routes);

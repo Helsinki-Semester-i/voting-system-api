@@ -1,5 +1,5 @@
+const { body, param, query, validationResult } = require('express-validator/check');
 const userService = require('../services/users.js');
-
 const Log = require('../utils/logger');
 const Error = require('../errors/statusError');
 const utils = require('../utils/utils.js');
@@ -10,6 +10,23 @@ function throwErrorForQueryParams(queryParams) {
     throw new Error(CODES.STATUS.BAD_REQUEST, 'Query params are not supported yet');
   }
 }
+
+function checkValidationResult(errors) {
+  if (!errors.isEmpty()) {
+    throw new Error(CODES.STATUS.BAD_REQUEST, errors.array());
+  }
+}
+
+const validate = (method) => {
+  switch (method) {
+    case 'getUserIdByEmail': {
+      return [
+        param('email', 'Invalid Email').isEmail(),
+      ];
+    }
+    default: return [];
+  }
+};
 
 const getUsers = async (req, res) => {
   try {
@@ -24,6 +41,7 @@ const getUsers = async (req, res) => {
 const getUserIdByEmail = async (req, res) => {
   try {
     throwErrorForQueryParams(req.query);
+    checkValidationResult(validationResult(req));
     const { email } = req.params;
     const data = await userService.getUserIdByEmail(email);
     if (utils.isEmptyArray(data)) {
@@ -102,6 +120,7 @@ const deleteUser = async (req, res) => {
 };
 
 module.exports = {
+  validate,
   getUsers,
   getUserById,
   getUserIdByEmail,
