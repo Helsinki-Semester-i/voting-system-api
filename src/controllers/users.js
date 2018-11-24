@@ -2,7 +2,7 @@ const { body, param, validationResult } = require('express-validator/check');
 const userService = require('../services/users.js');
 
 const {
-  Log, CODES, helper, throwErrorForQueryParams, checkValidationResult,
+  Log, CODES, utils, throwErrorForQueryParams, checkValidationResult, Error,
 } = require('./validationUtils');
 
 const validate = (method) => {
@@ -71,7 +71,7 @@ const getUserIdByEmail = async (req, res) => {
     checkValidationResult(validationResult(req));
     const { email } = req.params;
     const data = await userService.getUserIdByEmail(email);
-    if (helper.isEmptyArray(data)) {
+    if (utils.isEmptyArray(data)) {
       Log.warn(`User with email ${email} does not exist`);
       throw new Error(CODES.STATUS.NOT_FOUND, 'Searched user does not exists');
     }
@@ -88,7 +88,7 @@ const getUserById = async (req, res) => {
     checkValidationResult(validationResult(req));
     const { id } = req.params;
     const data = await userService.getUserById(id);
-    if (helper.isEmptyArray(data)) {
+    if (utils.isEmptyArray(data)) {
       Log.warn(`Non existent user was requested with id: ${id}`);
       throw new Error(CODES.STATUS.NOT_FOUND, 'User does not exists');
     }

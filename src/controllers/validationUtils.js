@@ -1,10 +1,10 @@
 const Log = require('../utils/logger');
 const Error = require('../errors/statusError');
-const helper = require('../utils/utils.js');
+const utils = require('../utils/utils.js');
 const CODES = require('../constants/httpCodes');
 
 const throwErrorForQueryParams = (queryParams) => {
-  if (!helper.isEmptyObject(queryParams)) {
+  if (!utils.isEmptyObject(queryParams)) {
     throw new Error(CODES.STATUS.BAD_REQUEST, 'Query params are not supported yet');
   }
 };
@@ -21,5 +21,6 @@ module.exports = {
   throwErrorForQueryParams,
   Log,
   CODES,
-  helper,
+  utils,
+  Error,
 };
