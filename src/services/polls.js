@@ -78,8 +78,8 @@ const postPoll = async (title, details, creation_date,
     const format = 'YYYY-MM-DD';
     await DataBase.query('INSERT INTO poll(title, details,creation_date, close_date, acceptance_percentage,anonymity) VALUES($1,$2,to_date($3, $7), to_date($4, $7),$5,$6);', [title, details, creation_date, close_date, acceptance_percentage, anonymity, format]);
     Log.info(`Poll created with title ${title}`);
-    const id = await DataBase.query('SELECT * FROM poll WHERE title = $1 AND details = $2 AND creation_date = to_date($3, $5) AND close_date = to_date($4,$5);', [title, details, creation_date, close_date, format]);
-    return id.rows[0].id;
+    const response = await DataBase.query('SELECT * FROM poll WHERE title = $1 AND details = $2 AND creation_date = to_date($3, $5) AND close_date = to_date($4,$5);', [title, details, creation_date, close_date, format]);
+    return response.rows;
   } catch (error) {
     Log.error(JSON.stringify(error));
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);

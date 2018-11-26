@@ -52,20 +52,24 @@ const postPoll = async (req, res) => {
     const usersIds = [];
     for (const i in users) {
       const email = users[i];
-      const id = await userService.getUserIdByEmail(email);
-      if (id === null) {
+      const response = await userService.getUserIdByEmail(email);
+      if (response.length === 0) {
         Log.warn('One or more users does not exist');
         throw new Error(CODES.STATUS.BAD_REQUEST, 'Cannot create anoymous poll, one or more users does not exist.');
       }
-      usersIds.push(id);
+      usersIds.push(response[0].id); //IMPLYING THAT RESPONSE HAS AT LEAST ONE USER
     }
 
     if (anonymity) {
-      const poll_id = await pollService.postPoll(title, details, creation_date, close_date, acceptance_percentage, anonymity);
-      Log.info(`New anonymous poll created with ID: ${poll_id}`);
-      createClosed_question(poll_id, anonymity, questions);
-      addUsersToPoll(usersIds, poll_id, anonymity);
-      res.status(CODES.STATUS.CREATED).send(`Anonymous poll created with ID: ${poll_id}`);
+      const polls = await pollService.postPoll(title, details, creation_date, close_date, acceptance_percentage, anonymity);
+      if(polls.length === 0){
+        //DO SOMETHING HERE IF POLL IS NOT FOUND
+      } 
+      let poll = polls[0]; //IMPLYTING THAT I FOUND SOMETHING
+      Log.info(`New anonymous poll created with ID: ${poll.id}`);
+      createClosed_question(poll.id, anonymity, questions);
+      addUsersToPoll(usersIds, poll.id, anonymity);
+      res.status(CODES.STATUS.CREATED).send(`Anonymous poll created with ID: ${poll.id}`);
     } else {
       Log.warn('Non-anoymous poll creation still not supported');
       throw new Error(CODES.STATUS.BAD_REQUEST, 'Cannot create non-anoymous polls');
@@ -102,9 +106,8 @@ const createClosed_options = async (poll_id, anonymity, priority, options) => {
     optionsLenght++;
   }
   // Log.info(`Creating ${optionsLenght} options`);
-  let option_priority;
-  for (option_priority = 1; option_priority <= optionsLenght; option_priority++) {
-    await pollService.createClosed_option(poll_id, anonymity, priority, option_priority, options[option_priority - 1].option_text);
+  for (let i in options) {
+    await pollService.createClosed_option(poll_id, anonymity, priority, options[i].order_priority, options[i].option_text);
     // Log.info(`New closed option created for poll with ID: ${poll_id}`);
     // res.status(CODES.STATUS.CREATED).send(`Option created for poll with ID ${poll_id} and question ${priority}`);
   }
