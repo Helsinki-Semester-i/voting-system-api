@@ -65,11 +65,11 @@ const postPoll = async (req, res) => {
       if(polls.length === 0){
         //DO SOMETHING HERE IF POLL IS NOT FOUND
       } 
-      let poll = polls[0]; //IMPLYTING THAT I FOUND SOMETHING
+      let poll = polls[0]; //IMPLYTING THAT IT FOUND SOMETHING
       Log.info(`New anonymous poll created with ID: ${poll.id}`);
       createClosed_question(poll.id, anonymity, questions);
       addUsersToPoll(usersIds, poll.id, anonymity);
-      res.status(CODES.STATUS.CREATED).send(`Anonymous poll created with ID: ${poll.id}`);
+      res.status(CODES.STATUS.CREATED).send(poll); //SEND RECENTLY CREATED POLL
     } else {
       Log.warn('Non-anoymous poll creation still not supported');
       throw new Error(CODES.STATUS.BAD_REQUEST, 'Cannot create non-anoymous polls');
