@@ -125,7 +125,7 @@ const updateUser = async (req, res) => {
       // eslint-disable-next-line camelcase
       first_name, last_name, email, phone,
     } = req.body;
-    await userService.createUser(id, first_name, last_name, email, phone);
+    await userService.updateUser(id, first_name, last_name, email, phone);
     Log.info(`User modified with ID: ${id}`);
     res.status(CODES.STATUS.OK).send(`User modified with ID: ${id}`);
   } catch (err) {
