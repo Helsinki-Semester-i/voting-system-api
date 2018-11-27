@@ -104,7 +104,8 @@ const postAnonymousVote = async (poll_id, poll_anonymity, questions) => {
     await createAnonymous_closed_response(id, poll_id, poll_anonymity, questions);
 
     // TODO: --  UPDATE USER STATUS
-    return data;
+    Log.warn(data);
+    return data.rows[0];
   } catch (error) {
     Log.error(JSON.stringify(error));
     throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
