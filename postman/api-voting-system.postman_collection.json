@@ -1,0 +1,686 @@
+{
+	"info": {
+		"_postman_id": "9e8eda69-3764-4cf9-9575-33140d366c4c",
+		"name": "API Voting System",
+		"description": "# Voting System API\n\nThis project enables the creation of anonymous and non-anonymous polls for specific users.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "oauth",
+			"item": [
+				{
+					"name": "Get user with login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c6584fa0-c9a5-42fe-a79c-32146eac537b",
+								"exec": [
+									"const email = \"geratrex@hotmail.com\";",
+									"pm.variables.set('EMAIL', email);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/oauth/{{EMAIL}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"oauth",
+								"{{EMAIL}}"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "The endpoint `Get /users/{{login}}` retrieves information about the user using its unique login field (email)."
+					},
+					"response": []
+				},
+				{
+					"name": "List all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/oauth",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"oauth"
+							]
+						},
+						"description": "The endpoint `GET /users/panelists` return th information of all users registered"
+					},
+					"response": []
+				},
+				{
+					"name": "Create users",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"profile\": {\n    \"firstName\": \"name\",\n    \"lastName\": \"last name\",\n    \"email\": \"sample@mail.com\",\n    \"login\": \"sample@mail.com\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/oauth?activate=true",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"oauth"
+							],
+							"query": [
+								{
+									"key": "activate",
+									"value": "true"
+								}
+							]
+						},
+						"description": "The endpoint `POST /users` creates a new panelist able to participate."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "25d8db18-b4e5-44d7-afc7-79f60df569b8",
+								"exec": [
+									"const ID = \"00ugyaj3w6NNzFuez0h7\";",
+									"pm.variables.set('OKTA_ID', ID);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/oauth/{{OKTA_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"oauth",
+								"{{OKTA_ID}}"
+							]
+						},
+						"description": "The endpoint `DELETE /users/{{userId}}` removes a panelist using its ID"
+					},
+					"response": []
+				}
+			],
+			"description": "Calls to Okta auth API"
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "Create new user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1c41f230-a738-4d98-b92b-ec806cf9d4d2",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"const userSchema = {",
+									"  \"required\": [\"id\", \"first_name\", \"last_name\", \"email\", \"phone\"],",
+									"  \"properties\": {",
+									"    \"id\": {",
+									"      \"type\": \"integer\",",
+									"      \"minimum\": 0,",
+									"    },",
+									"    \"first_name\": {",
+									"      \"type\": \"string\",",
+									"      \"minLength\": 1,",
+									"      \"maxLength\": 25",
+									"    },",
+									"    \"last_name\": {",
+									"      \"type\": \"string\",",
+									"      \"minLength\": 1,",
+									"      \"maxLength\": 25",
+									"    },",
+									"    \"email\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"phone\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"  }",
+									"};",
+									"",
+									"pm.environment.set(\"userEmail\", \"postmanTest1@mail.com\");",
+									"pm.environment.set(\"userSchema\", userSchema);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"first_name\": \"PostmanTest1\",\n\t\"last_name\": \"PTest1\",\n\t\"email\": \"postmanTest1@mail.com\",\n\t\"phone\": 123456789\n}"
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "The endpoint `POST /user` creates a new user using name and email as body params"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d5076bdf-7543-4f49-b730-cc58e0d5bb30",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const userSchema = pm.environment.get(\"userSchema\");",
+									"",
+									"pm.test('Matches User property value', () => {",
+									"    _.each(pm.response.json(), (arrItem) => {",
+									"        tests[\"User is valid\"] = tv4.validate(arrItem, userSchema);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "The endpoint `GET /users` returns a list of created users"
+					},
+					"response": []
+				},
+				{
+					"name": "Get user with email",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "486c8f81-869a-4257-85e9-9a544d9cd6a4",
+								"exec": [
+									"",
+									"const email = pm.environment.get(\"userEmail\");",
+									"pm.variables.set('USER_EMAIL', email);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "a589c24b-7244-4748-8293-ff890d482929",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var data = pm.response.json();",
+									"var IdSchema = {",
+									"  \"id\": {",
+									"    \"type\": \"integer\"",
+									"  }",
+									"};",
+									"",
+									"tests[\"Id is valid\"] = tv4.validate(data, IdSchema);",
+									"",
+									"pm.environment.set(\"userId\", data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/users/byMail/{{USER_EMAIL}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"byMail",
+								"{{USER_EMAIL}}"
+							]
+						},
+						"description": "The endpoint `GET /users/{{USER_EMAIL}}` retrieves information about the user with its email"
+					},
+					"response": []
+				},
+				{
+					"name": "Get user with Id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "38bc716c-6fd7-47bf-b39a-18b8b8e25039",
+								"exec": [
+									"",
+									"const ID = pm.environment.get(\"userId\");",
+									"pm.variables.set('USER_ID', ID);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1f0d53e6-508e-4c74-add9-098057e735e1",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/users/{{USER_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"{{USER_ID}}"
+							]
+						},
+						"description": "The endpoint `GET users/{{id}}` returns informattion about a single user using its ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4567b723-1101-47d4-9e79-6fc9e95c1b33",
+								"exec": [
+									"const ID = pm.environment.get(\"userId\");",
+									"pm.variables.set('USER_ID', ID);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "a9dfb9bc-70b7-44ca-bdcf-6f43161f5554",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const ID = pm.environment.get(\"userId\");",
+									"",
+									"pm.test(\"Body matches string response\", function () {",
+									"    pm.expect(pm.response.text()).to.include(`User modified with ID: ${ID}`);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"first_name\": \"PostmanTest1Updated\",\n\t\"last_name\": \"PTest1Updated\",\n\t\"email\": \"postmanTest1@updatedmail.com\",\n\t\"phone\": 123456789\n}"
+						},
+						"url": {
+							"raw": "{{url}}/users/{{USER_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"{{USER_ID}}"
+							]
+						},
+						"description": "The endpoint `PUT /users/{{id}}` update an user's name and email"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5a6ed8e2-2c9d-415d-b7c3-f99e2e3721cc",
+								"exec": [
+									"const ID = pm.environment.get(\"userId\");",
+									"pm.variables.set('USER_ID', ID);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "9b55aac8-187d-4beb-acad-6e2369151c90",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const ID = pm.environment.get(\"userId\");",
+									"",
+									"pm.test(\"Body matches string response\", function () {",
+									"    pm.expect(pm.response.text()).to.include(`User deleted with ID: ${ID}`);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/users/{{USER_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"{{USER_ID}}"
+							]
+						},
+						"description": "The endpoint `DELETE users/{{id}}` deletes the user using its ID"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints related to the user resource"
+		},
+		{
+			"name": "Retrieve user's polls",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5f791514-03f3-4220-84af-14dc1d61a3f4",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/polls?user_id={{user_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"polls"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "{{user_id}}",
+							"description": "Retrieve polls assigned to the user id"
+						}
+					]
+				},
+				"description": "The endpoint `GET /polls` retrieves the collection of polls that the authenticated user has access to."
+			},
+			"response": [
+				{
+					"name": "Retrieve user's polls",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/polls?userId={{userId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"polls"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{userId}}",
+									"description": "Retrieve polls assigned to the user id"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"body": "[\r\n\t{\r\n\t  \"id\": 1,\r\n\t  \"title\": \"Poll 1\",\r\n\t  \"description\": \"This is a test Poll\",\r\n\t  \"participants\": [\"id_testUser\"],\r\n\t  \"start_date\": \"today\",\r\n\t  \"end_date\": \"tomorrow\",\r\n\t  \"anonymous\": true,\r\n\t  \"questions\": [\r\n\t\t  {\r\n\t\t    \"id\": 1,\r\n\t\t    \"question\": \"Do you agree with rule 1?\",\r\n\t\t    \"open\": false,\r\n\t\t    \"answers\": {\r\n\t\t      \"1\": \"Agree\",\r\n\t\t      \"2\": \"Disagree\",\r\n\t\t      \"3\": \"Neutral\"\r\n\t\t    }\r\n\t\t  },\r\n\t\t  {\r\n\t\t    \"id\": 2,\r\n\t\t    \"question\": \"Do you agree with rule 2?\",\r\n\t\t    \"open\": false,\r\n\t\t    \"answers\": {\r\n\t\t      \"1\": \"Agree\",\r\n\t\t      \"2\": \"Disagree\",\r\n\t\t      \"3\": \"Neutral\"\r\n\t\t    }\r\n\t\t  }\r\n\t\t]\r\n\t}\r\n]\r\n"
+				}
+			]
+		},
+		{
+			"name": "Retrieve a specific poll",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/polls/{{poll_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"polls",
+						"{{poll_id}}"
+					]
+				},
+				"description": "The endpoint `GET /polls/{{poll_id}}` retrieves a poll with the specified poll id if exists"
+			},
+			"response": [
+				{
+					"name": "Retrieve a specific poll",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/polls/{{poll_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"polls",
+								"{{poll_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\r\n    \"id\": \"id_testPoll\",\r\n    \"title\": \"Poll 1\",\r\n    \"description\": \"This is a test Poll\",\r\n    \"start_date\": \"today\",\r\n\t\"end_date\": \"tomorrow\",\r\n    \"participants\": [\r\n      \"id_testUser\"\r\n    ],\r\n    \"anonymous\": true,\r\n    \"questions\": [\r\n      {\r\n        \"id\": 1,\r\n        \"question\": \"Do you agree with rule 1?\",\r\n        \"open\": false,\r\n        \"answers\": {\r\n          \"1\": \"Agree\",\r\n          \"2\": \"Disagree\",\r\n          \"3\": \"Neutral\"\r\n        }\r\n      },\r\n      {\r\n        \"id\": 2,\r\n        \"question\": \"Do you agree with rule 2?\",\r\n        \"open\": false,\r\n        \"answers\": {\r\n          \"1\": \"Agree\",\r\n          \"2\": \"Disagree\",\r\n          \"3\": \"Neutral\"\r\n        }\r\n      }\r\n    ]\r\n  }"
+				}
+			]
+		},
+		{
+			"name": "Create a vote",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"id1\",\n\t\"poll_id\": \"id_testPoll\",\n\t\"user_id\": \"\",\n\t\"vote\": [\n\t\t{\n\t\t\t\"question_id\": \"1\",\n\t\t\t\"answer\": \"2\"\n\t\t},\n\t\t{\n\t\t\t\"question_id\": \"2\",\n\t\t\t\"answer\": \"2\"\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "{{url}}/vote",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"vote"
+					]
+				},
+				"description": "The endpoint `POST /vote` creates an object vote with information about the answered questions of a poll made by the user."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "19c93360-9c04-477f-b12d-6208982779b5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "70714ec5-80cd-499f-8be8-f41ec3c54bd9",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
