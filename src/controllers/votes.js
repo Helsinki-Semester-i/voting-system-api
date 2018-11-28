@@ -8,9 +8,7 @@ const validate = (method) => {
   switch (method) {
     case 'getVoteByCode': {
       return [
-        param('code').exists().withMessage('Code required')
-          .isAlphanumeric()
-          .withMessage('Invalid Code'),
+        param('code').exists().withMessage('Code required'),
       ];
     }
     case 'postVote': {
