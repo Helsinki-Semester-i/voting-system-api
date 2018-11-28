@@ -16,7 +16,7 @@ app.use(cors());
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-// app.use(authMiddleware); // TODO: remove comment for production
+app.use(authMiddleware); // TODO: remove comment for production
 app.use(expressValidator());
 
 // ROUTES FOR OUR API
