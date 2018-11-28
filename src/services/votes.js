@@ -71,6 +71,7 @@ FROM \
   try {
     const results = await DataBase.query(getVoteByCodeQuery, [code]);
     Log.info(`Request to ballot with code: ${code}`);
+    console.log('test', results);
     return results.rows[0].row_to_json;
   } catch (error) {
     Log.error(JSON.stringify(error));

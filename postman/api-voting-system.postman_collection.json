@@ -39,13 +39,6 @@
 							"path": [
 								"oauth",
 								"{{EMAIL}}"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": "",
-									"disabled": true
-								}
 							]
 						},
 						"description": "The endpoint `Get /users/{{login}}` retrieves information about the user using its unique login field (email)."
@@ -146,10 +139,32 @@
 					"response": []
 				}
 			],
-			"description": "Calls to Okta auth API"
+			"description": "Generate calls to Okta auth API through our API",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4aa6382f-7c06-4f40-9efa-d1a04eb2bf51",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "45ea8b28-f665-4352-bbef-7407e6c97b15",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
 		},
 		{
-			"name": "users",
+			"name": "Users",
 			"item": [
 				{
 					"name": "Create new user",
@@ -493,162 +508,177 @@
 					"response": []
 				}
 			],
-			"description": "Endpoints related to the user resource"
-		},
-		{
-			"name": "Retrieve user's polls",
+			"description": "Endpoints related to the user resource",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "5f791514-03f3-4220-84af-14dc1d61a3f4",
+						"id": "c682ff58-a722-4ac8-848f-add440b08fb5",
+						"type": "text/javascript",
 						"exec": [
 							""
-						],
-						"type": "text/javascript"
+						]
 					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "7b11e4af-9cfd-4611-aa50-e83781832de4",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Votes",
+			"item": [
+				{
+					"name": "Create a new anonymous Vote",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aa97557b-4229-416a-bfbd-62638716687d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.environment.set(\"voteUCode\", pm.response.text());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 55,\n    \"title\": \"Test Votación para decidir si las clases de Wizeline valen la pena\",\n    \"details\": \"Esta votación es solo para consolidar la opinion de los estudiantes de Wizeline para obtener feedback de las clases impartidas por Wizeline. La votación será anonima para que los alumnos sean honestos con las repsuestas.\",\n    \"creation_date\": \"2018-11-30T00:00:00\",\n    \"close_date\": \"2018-12-03T00:00:00\",\n    \"acceptance_percentage\": 10,\n    \"anonymity\": true,\n    \"questions\": [\n        {\n            \"question\": \"¿Que calificación le darías a la clase de Technical Writing?\",\n            \"order_priority\": 1,\n            \"response\": 2,\n            \"options\": [\n                {\n                    \"option_text\": \"Muy mala\",\n                    \"order_priority\": 1\n                },\n                {\n                    \"option_text\": \"Mala\",\n                    \"order_priority\": 2\n                },\n                {\n                    \"option_text\": \"Mas o menos\",\n                    \"order_priority\": 3\n                },\n                {\n                    \"option_text\": \"Buena\",\n                    \"order_priority\": 4\n                },\n                {\n                    \"option_text\": \"Muy buena\",\n                    \"order_priority\": 5\n                }\n            ]\n        },\n        {\n            \"question\": \"¿Que calificación le darías a la clase de Seguridad?\",\n            \"order_priority\": 2,\n            \"response\": 2,\n            \"options\": [\n                {\n                    \"option_text\": \"Muy mala\",\n                    \"order_priority\": 1\n                },\n                {\n                    \"option_text\": \"Mala\",\n                    \"order_priority\": 2\n                },\n                {\n                    \"option_text\": \"Mas o menos\",\n                    \"order_priority\": 3\n                },\n                {\n                    \"option_text\": \"Buena\",\n                    \"order_priority\": 4\n                },\n                {\n                    \"option_text\": \"Muy buena\",\n                    \"order_priority\": 5\n                }\n            ]\n        },\n        {\n            \"question\": \"¿Que calificación le darías a la clase de UX?\",\n            \"order_priority\": 3,\n            \"response\": null,\n            \"options\": [\n                {\n                    \"option_text\": \"Muy mala\",\n                    \"order_priority\": 1\n                },\n                {\n                    \"option_text\": \"Mala\",\n                    \"order_priority\": 2\n                },\n                {\n                    \"option_text\": \"Mas o menos\",\n                    \"order_priority\": 3\n                },\n                {\n                    \"option_text\": \"Buena\",\n                    \"order_priority\": 4\n                },\n                {\n                    \"option_text\": \"Muy buena\",\n                    \"order_priority\": 5\n                }\n            ]\n        },\n        {\n            \"question\": \"¿Que calificación le darías a la clase de Desarrollo Web?\",\n            \"order_priority\": 4,\n            \"response\": 2,\n            \"options\": [\n                {\n                    \"option_text\": \"Muy mala\",\n                    \"order_priority\": 1\n                },\n                {\n                    \"option_text\": \"Mala\",\n                    \"order_priority\": 2\n                },\n                {\n                    \"option_text\": \"Mas o menos\",\n                    \"order_priority\": 3\n                },\n                {\n                    \"option_text\": \"Buena\",\n                    \"order_priority\": 4\n                },\n                {\n                    \"option_text\": \"Muy buena\",\n                    \"order_priority\": 5\n                }\n            ]\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/votes",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"votes"
+							]
+						},
+						"description": "The endpoint `POST /votes` creates a new anonymoous vote."
+					},
+					"response": []
+				},
+				{
+					"name": "Get a vote with code",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b8a8b049-7260-46fa-8c3a-6627d0a4671f",
+								"exec": [
+									"",
+									"const UCode = pm.environment.get(\"voteUCode\");",
+									"pm.variables.set('CODE', UCode);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "65322a65-a56a-494f-a9af-c08cc8e59b7e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const voteSchema = {",
+									"  \"required\": [\"id\", \"first_name\", \"last_name\", \"email\", \"phone\"],",
+									"  \"properties\": {",
+									"    \"id\": {",
+									"      \"type\": \"integer\",",
+									"      \"minimum\": 0,",
+									"    },",
+									"    \"first_name\": {",
+									"      \"type\": \"string\",",
+									"      \"minLength\": 1,",
+									"      \"maxLength\": 25",
+									"    },",
+									"    \"last_name\": {",
+									"      \"type\": \"string\",",
+									"      \"minLength\": 1,",
+									"      \"maxLength\": 25",
+									"    },",
+									"    \"email\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"phone\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"  }",
+									"};"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/votes/{{CODE}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"votes",
+								"{{CODE}}"
+							]
+						},
+						"description": "The endpoint `GET /votes/{{CODE}}` return the vote with the specified code."
+					},
+					"response": []
 				}
 			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{url}}/polls?user_id={{user_id}}",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"polls"
-					],
-					"query": [
-						{
-							"key": "user_id",
-							"value": "{{user_id}}",
-							"description": "Retrieve polls assigned to the user id"
-						}
-					]
-				},
-				"description": "The endpoint `GET /polls` retrieves the collection of polls that the authenticated user has access to."
-			},
-			"response": [
+			"description": "The votes genereated each time an user participates in a poll.",
+			"event": [
 				{
-					"name": "Retrieve user's polls",
-					"originalRequest": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{url}}/polls?userId={{userId}}",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"polls"
-							],
-							"query": [
-								{
-									"key": "userId",
-									"value": "{{userId}}",
-									"description": "Retrieve polls assigned to the user id"
-								}
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [],
-					"cookie": [],
-					"body": "[\r\n\t{\r\n\t  \"id\": 1,\r\n\t  \"title\": \"Poll 1\",\r\n\t  \"description\": \"This is a test Poll\",\r\n\t  \"participants\": [\"id_testUser\"],\r\n\t  \"start_date\": \"today\",\r\n\t  \"end_date\": \"tomorrow\",\r\n\t  \"anonymous\": true,\r\n\t  \"questions\": [\r\n\t\t  {\r\n\t\t    \"id\": 1,\r\n\t\t    \"question\": \"Do you agree with rule 1?\",\r\n\t\t    \"open\": false,\r\n\t\t    \"answers\": {\r\n\t\t      \"1\": \"Agree\",\r\n\t\t      \"2\": \"Disagree\",\r\n\t\t      \"3\": \"Neutral\"\r\n\t\t    }\r\n\t\t  },\r\n\t\t  {\r\n\t\t    \"id\": 2,\r\n\t\t    \"question\": \"Do you agree with rule 2?\",\r\n\t\t    \"open\": false,\r\n\t\t    \"answers\": {\r\n\t\t      \"1\": \"Agree\",\r\n\t\t      \"2\": \"Disagree\",\r\n\t\t      \"3\": \"Neutral\"\r\n\t\t    }\r\n\t\t  }\r\n\t\t]\r\n\t}\r\n]\r\n"
-				}
-			]
-		},
-		{
-			"name": "Retrieve a specific poll",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{url}}/polls/{{poll_id}}",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"polls",
-						"{{poll_id}}"
-					]
-				},
-				"description": "The endpoint `GET /polls/{{poll_id}}` retrieves a poll with the specified poll id if exists"
-			},
-			"response": [
-				{
-					"name": "Retrieve a specific poll",
-					"originalRequest": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{url}}/polls/{{poll_id}}",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"polls",
-								"{{poll_id}}"
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": null,
-					"cookie": [],
-					"body": "{\r\n    \"id\": \"id_testPoll\",\r\n    \"title\": \"Poll 1\",\r\n    \"description\": \"This is a test Poll\",\r\n    \"start_date\": \"today\",\r\n\t\"end_date\": \"tomorrow\",\r\n    \"participants\": [\r\n      \"id_testUser\"\r\n    ],\r\n    \"anonymous\": true,\r\n    \"questions\": [\r\n      {\r\n        \"id\": 1,\r\n        \"question\": \"Do you agree with rule 1?\",\r\n        \"open\": false,\r\n        \"answers\": {\r\n          \"1\": \"Agree\",\r\n          \"2\": \"Disagree\",\r\n          \"3\": \"Neutral\"\r\n        }\r\n      },\r\n      {\r\n        \"id\": 2,\r\n        \"question\": \"Do you agree with rule 2?\",\r\n        \"open\": false,\r\n        \"answers\": {\r\n          \"1\": \"Agree\",\r\n          \"2\": \"Disagree\",\r\n          \"3\": \"Neutral\"\r\n        }\r\n      }\r\n    ]\r\n  }"
-				}
-			]
-		},
-		{
-			"name": "Create a vote",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
+					"listen": "prerequest",
+					"script": {
+						"id": "3f8ad669-d053-49f4-a532-c35ac1b6a274",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
 					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"id\": \"id1\",\n\t\"poll_id\": \"id_testPoll\",\n\t\"user_id\": \"\",\n\t\"vote\": [\n\t\t{\n\t\t\t\"question_id\": \"1\",\n\t\t\t\"answer\": \"2\"\n\t\t},\n\t\t{\n\t\t\t\"question_id\": \"2\",\n\t\t\t\"answer\": \"2\"\n\t\t}\n\t]\n}"
 				},
-				"url": {
-					"raw": "{{url}}/vote",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"vote"
-					]
-				},
-				"description": "The endpoint `POST /vote` creates an object vote with information about the answered questions of a poll made by the user."
-			},
-			"response": []
+				{
+					"listen": "test",
+					"script": {
+						"id": "eb2ce59a-ef64-4ca4-adda-eaf4bf4f4e22",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
 		}
 	],
 	"auth": {
