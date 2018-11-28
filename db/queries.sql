@@ -87,29 +87,35 @@ FROM
             *,
             (
                 SELECT
+                    (r.val * 1.0 / p.val) * 100.0 > poll.acceptance_percentage
+                FROM
+                    (
+                        SELECT
+                            COUNT(participation.*) AS val
+                        FROM
+                            participation
+                        WHERE
+                            participation.poll_id = $1
+                    ) p,
+                    (
+                        SELECT
+                            COUNT(anonymous_closed_response.*) AS val
+                        FROM
+                            anonymous_closed_response
+                        WHERE
+                            anonymous_closed_response.poll_id = $1
+                    ) r
+            ) AS accepted,
+            (
+                SELECT
                     array_to_json(array_agg(row_to_json(q)))
                 FROM
                     (
                         SELECT
                             question,
-                            (
-                                SELECT
-                                    array_to_json(array_agg(row_to_json(o)))
-                                FROM
-                                    (
-                                        SELECT
-                                            option_text,
-                                            vote_count
-                                        FROM
-                                            closed_poll_result
-                                        WHERE
-                                            poll_id = $1 AND closed_question.order_priority = question_order_priority
-                                        ORDER BY
-                                            order_priority
-                                    ) o
-                            ) AS options
+                            vote_count
                         FROM
-                            closed_question
+                            closed_question_result
                         WHERE
                             poll_id = $1
                         ORDER BY
