@@ -34,6 +34,7 @@ FROM \
                                                     ( \
                                                         SELECT \
                                                             option_text, \
+                                                            order_priority, \
                                                             (CASE WHEN closed_option.order_priority = anonymous_closed_response.option_priority THEN true ELSE false END) AS chosen \
                                                         FROM \
                                                             closed_option LEFT JOIN anonymous_closed_response \
@@ -47,7 +48,7 @@ FROM \
                                                         ORDER BY \
                                                             order_priority \
                                                     ) o \
-                                            ) AS question_option \
+                                            ) AS options \
                                         FROM \
                                             closed_question \
                                         WHERE \
