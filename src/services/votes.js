@@ -71,7 +71,6 @@ FROM \
   try {
     const results = await DataBase.query(getVoteByCodeQuery, [code]);
     Log.info(`Request to ballot with code: ${code}`);
-    console.log('test', results);
     return results.rows[0].row_to_json;
   } catch (error) {
     Log.error(JSON.stringify(error));
@@ -95,7 +94,7 @@ const postAnonymousVote = async (poll_id, poll_anonymity, questions) => {
     await DataBase.query('INSERT INTO anonymous_ballot(poll_id,poll_anonymity,unique_code) VALUES($1,$2,$3);', [poll_id, poll_anonymity, code]);
     Log.info(`Anonymous ballot created with code: ${code}`);
     const data = await DataBase.query('SELECT * FROM anonymous_ballot WHERE unique_code = $1;', [code]);
-    if(data.length === 0 || data === null){
+    if (data.length === 0 || data === null){
         Log.warn("Data is empty");
         throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR); //PUT CUSTOM ERROR HERE
     }
