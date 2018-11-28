@@ -547,7 +547,9 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.environment.set(\"voteUCode\", pm.response.text());"
+									"var data = pm.response.json();",
+									"",
+									"pm.environment.set(\"voteUCode\", data.unique_code);"
 								],
 								"type": "text/javascript"
 							}
@@ -605,30 +607,31 @@
 									"});",
 									"",
 									"const voteSchema = {",
-									"  \"required\": [\"id\", \"first_name\", \"last_name\", \"email\", \"phone\"],",
+									"  \"type\": \"object\",",
+									"  \"required\": [\"id\", \"poll_id\", \"poll_anonymity\", \"unique_code\", \"poll\"],",
 									"  \"properties\": {",
 									"    \"id\": {",
 									"      \"type\": \"integer\",",
 									"      \"minimum\": 0,",
 									"    },",
-									"    \"first_name\": {",
+									"    \"poll_id\": {",
+									"      \"type\": \"integer\",",
+									"    },",
+									"    \"poll_anonymity\": {",
+									"      \"type\": \"boolean\",",
+									"    },",
+									"    \"unique_code\": {",
 									"      \"type\": \"string\",",
-									"      \"minLength\": 1,",
-									"      \"maxLength\": 25",
 									"    },",
-									"    \"last_name\": {",
-									"      \"type\": \"string\",",
-									"      \"minLength\": 1,",
-									"      \"maxLength\": 25",
-									"    },",
-									"    \"email\": {",
-									"      \"type\": \"string\"",
-									"    },",
-									"    \"phone\": {",
-									"      \"type\": \"string\"",
-									"    },",
+									"    \"poll\": {",
+									"        \"type\": \"object\",",
+									"    }",
 									"  }",
-									"};"
+									"};",
+									"",
+									"var data = pm.response.json();",
+									"tests[\"Vote is valid\"] = tv4.validate(data, voteSchema);",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -711,6 +714,14 @@
 					""
 				]
 			}
+		}
+	],
+	"variable": [
+		{
+			"id": "a39b5740-01c0-4b1c-a5f5-c9aa2eb524ae",
+			"key": "authToken",
+			"value": "eyJraWQiOiJjOWFzZ3AxQ3pLRk1yZkJwMC1nTmQ4ODdUUlBwRHJmWjI2eVFjUmpCWUowIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlhnUlc0czZ5TmV6V3NzUl9BSUx1OFZsSEF0Zzg5MVY4cm41dm9oazlFRFEiLCJpc3MiOiJodHRwczovL2Rldi03NDkyMjEub2t0YXByZXZpZXcuY29tL29hdXRoMi9hdXNndDZpZmkxWlZwM3VtUjBoNyIsImF1ZCI6Ildpa2lwb2xpdGljYSIsImlhdCI6MTU0MzM2ODY3MCwiZXhwIjoxNTQzMzcyMjcwLCJjaWQiOiIwb2FnbmdubXBxbUtCMFM2dDBoNyIsInVpZCI6IjAwdWd6cDFoc2lpQUpSQU1JMGg3Iiwic2NwIjpbInBhcnRzX21hbmFnZXIiLCJlbWFpbCIsIm9wZW5pZCJdLCJzdWIiOiJwb3N0bWFuQHBhbmVsaXN0LmNvbSJ9.qtyXJiQLmxT07kn3a7-GsjN-nRX_GLWW144_d9b-8cvNmRTTPS339qBeeWlADNmHaYfqW5dNtVCF9r9gLxLZDR9y6rLZdSJ4SCA72SiZDuEOkpLKW0SVjkYwl4btCLAa5Drr_Yx4jhTDpI9zx8a6W3GS3oNVKTXu-27RYVabsZlersVBrkTO4V59T4cf7RiYZa0DNpazrAjOUR0UgM_umOqaAC6rMZWnNVEA12Sd4p-l-hJAHDdaIDRhL4vT5ZTKqrvfmIzwyF6gA-0817AwWu0Lib87zlCjFoux0AFG3bxeZGDqwl5FAo2zdpJSXdDNtTXy-D4fYnAefkbWAGXZ_Q",
+			"type": "string"
 		}
 	]
 }
