@@ -17,12 +17,11 @@ const checkValidationResult = (errors) => {
   }
 };
 
-const alreadyVoted = async (email, poll_id) => {
-  const { id } = (await getUserIdByEmail(email))[0];
+const alreadyVoted = async (id, poll_id) => {
   const user = (await getUserById(id))[0].row_to_json;
   for(let i in user.polls){
     let poll = user.polls[i];
-    if (poll.id == id){
+    if (poll.id == poll_id){
       if(poll.vote_status == 'voted') {
         throw new Error(CODES.STATUS.FORBIDDEN, 'User already voted.');
       } else {

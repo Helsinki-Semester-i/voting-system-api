@@ -104,7 +104,6 @@ const postAnonymousVote = async (poll_id, poll_anonymity, questions) => {
     // eslint-disable-next-line no-use-before-define
     await createAnonymous_closed_response(id, poll_id, poll_anonymity, questions);
 
-    // TODO: --  UPDATE USER STATUS
     return data.rows[0];
   } catch (error) {
     Log.error(JSON.stringify(error));

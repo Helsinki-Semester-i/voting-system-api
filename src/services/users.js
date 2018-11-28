@@ -105,6 +105,16 @@ const deleteUser = async (id) => {
   }
 };
 
+const setVoteStatus = async (uid, poll_id, status) => {
+  try {
+    await DataBase.query('UPDATE participation SET vote_status = $3 WHERE wiki_user_id = $1 AND poll_id = $2;', [uid, poll_id, status]);
+    Log.info(`Vote user ID: ${uid} on poll: ${poll_id} set to status: ${status}`);
+  } catch (error) {
+    Log.error(JSON.stringify(error));
+    throw new Error(CODES.STATUS.INT_SERV_ERR, CODES.MSG.INT_SERV_ERR);
+  }
+};
+
 module.exports = {
   getUsers,
   getUserById,
@@ -112,4 +122,5 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  setVoteStatus,
 };

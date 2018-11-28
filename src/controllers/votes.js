@@ -1,5 +1,6 @@
 const { body, param, validationResult } = require('express-validator/check');
 const votesService = require('../services/votes.js');
+const { setVoteStatus, getUserIdByEmail } = require('../services/users.js');
 const {
   Log, CODES, utils, throwErrorForQueryParams, Error, checkValidationResult, alreadyVoted,
 } = require('./validationUtils');
@@ -50,9 +51,10 @@ const postAnonymousVote = async (req, res) => {
     throwErrorForQueryParams(req.query);
     checkValidationResult(validationResult(req));
     const { id, anonymity, questions } = req.body;
-    await alreadyVoted(req.user.email, id);
+    const uid = (await getUserIdByEmail(req.user.email))[0].id;
+    await alreadyVoted(uid, id);
     const data = await votesService.postAnonymousVote(id, anonymity, questions);
-    // Set status as 'voted'
+    await setVoteStatus(uid, id, 'voted');
     res.status(CODES.STATUS.OK).json(data);
   } catch (err) {
     res.status(err.code).send({ error: err.msg });
