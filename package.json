@@ -1,6 +1,6 @@
 {
   "name": "node-api",
-  "main": "server.js",
+  "main": "app.js",
   "dependencies": {
     "@okta/jwt-verifier": "0.0.14",
     "axios": "^0.18.0",

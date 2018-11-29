@@ -8,7 +8,7 @@ const expressValidator = require('express-validator');
 
 const app = express();
 
-const port = process.env.PORT;
+const port = process.env.PORT || 8000;
 const routes = require('./routes/index.js');
 const authMiddleware = require('./auth'); // eslint-disable-line
 
