@@ -23,7 +23,8 @@
     "start": "node src/app.js",
     "test": "node .",
     "lint": "./node_modules/.bin/eslint ./src --fix",
-    "test-api": "newman run postman/api.postman_collection.json -e postman/Local.postman_environment.json --folder"
+    "postinstall": "if test \"$NODE_ENV\" = \"production\" ; then npm run build ; fi ",
+    "test-api": "newman run postman/api.postman_collection.json -e postman/Local.postman_environment.json"
   },
   "devDependencies": {
     "eslint": "^5.9.0",

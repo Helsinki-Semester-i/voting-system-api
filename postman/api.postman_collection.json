@@ -7,163 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "oauth",
-			"item": [
-				{
-					"name": "Get user with login",
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"id": "c6584fa0-c9a5-42fe-a79c-32146eac537b",
-								"exec": [
-									"const email = \"geratrex@hotmail.com\";",
-									"pm.variables.set('EMAIL', email);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{url}}/oauth/{{EMAIL}}",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"oauth",
-								"{{EMAIL}}"
-							]
-						},
-						"description": "The endpoint `Get /users/{{login}}` retrieves information about the user using its unique login field (email)."
-					},
-					"response": []
-				},
-				{
-					"name": "List all users",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{url}}/oauth",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"oauth"
-							]
-						},
-						"description": "The endpoint `GET /users/panelists` return th information of all users registered"
-					},
-					"response": []
-				},
-				{
-					"name": "Create users",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"profile\": {\n    \"firstName\": \"name\",\n    \"lastName\": \"last name\",\n    \"email\": \"sample@mail.com\",\n    \"login\": \"sample@mail.com\"\n  }\n}"
-						},
-						"url": {
-							"raw": "{{url}}/oauth?activate=true",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"oauth"
-							],
-							"query": [
-								{
-									"key": "activate",
-									"value": "true"
-								}
-							]
-						},
-						"description": "The endpoint `POST /users` creates a new panelist able to participate."
-					},
-					"response": []
-				},
-				{
-					"name": "Delete user",
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"id": "25d8db18-b4e5-44d7-afc7-79f60df569b8",
-								"exec": [
-									"const ID = \"00ugyaj3w6NNzFuez0h7\";",
-									"pm.variables.set('OKTA_ID', ID);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{url}}/oauth/{{OKTA_ID}}",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"oauth",
-								"{{OKTA_ID}}"
-							]
-						},
-						"description": "The endpoint `DELETE /users/{{userId}}` removes a panelist using its ID"
-					},
-					"response": []
-				}
-			],
-			"description": "Generate calls to Okta auth API through our API",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "4aa6382f-7c06-4f40-9efa-d1a04eb2bf51",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "45ea8b28-f665-4352-bbef-7407e6c97b15",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		},
-		{
 			"name": "Users",
 			"item": [
 				{
@@ -204,7 +47,8 @@
 									"  }",
 									"};",
 									"",
-									"pm.environment.set(\"userEmail\", \"postmanTest1@mail.com\");",
+									"var jsonData = pm.response.json()",
+									"pm.environment.set(\"userEmail\", jsonData.email);",
 									"pm.environment.set(\"userSchema\", userSchema);"
 								],
 								"type": "text/javascript"
@@ -223,7 +67,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"first_name\": \"PostmanTest1\",\n\t\"last_name\": \"PTest1\",\n\t\"email\": \"postmanTest1@mail.com\",\n\t\"phone\": 123456789\n}"
+							"raw": "{\n\t\"first_name\": \"PostmanTestCreate3\",\n\t\"last_name\": \"PostmanTestCreate13\",\n\t\"email\": \"postmanTestCreate3@mail.com\",\n\t\"phone\": 9876543219\n}"
 						},
 						"url": {
 							"raw": "{{url}}/users",
@@ -365,7 +209,9 @@
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
-									"});"
+									"});",
+									"",
+									"// postman.setNextRequest(\"Create new Poll\");"
 								],
 								"type": "text/javascript"
 							}
@@ -437,7 +283,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"first_name\": \"PostmanTest1Updated\",\n\t\"last_name\": \"PTest1Updated\",\n\t\"email\": \"postmanTest1@updatedmail.com\",\n\t\"phone\": 123456789\n}"
+							"raw": "{\n\t\"first_name\": \"PostmanUpdateCreate\",\n\t\"last_name\": \"PostmanUpdateCreate\",\n\t\"email\": \"PostmanUpdateCreate@updatedmail.com\",\n\t\"phone\": 1212121212\n}"
 						},
 						"url": {
 							"raw": "{{url}}/users/{{USER_ID}}",
@@ -533,6 +379,192 @@
 			]
 		},
 		{
+			"name": "Polls",
+			"item": [
+				{
+					"name": "Create new Poll",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "93c147e1-76b0-4590-b598-1c96ad23a705",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"// schema",
+									"const pollSchema = {",
+									"  \"required\": [\"id\", \"title\", \"details\", \"creation_date\", \"close_date\", \"acceptance_percentage\", \"anonymity\"],",
+									"  \"properties\": {",
+									"    \"id\": {",
+									"      \"type\": \"integer\",",
+									"      \"minimum\": 0,",
+									"    },",
+									"    \"title\": {",
+									"      \"type\": \"string\",",
+									"    },",
+									"    \"details\": {",
+									"      \"type\": \"string\",",
+									"    },",
+									"    \"creation_date\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"close_date\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"acceptance_percentage\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"anonymity\": {",
+									"      \"type\": \"boolean\"",
+									"    }",
+									"  }",
+									"};",
+									"",
+									"var data = pm.response.json();",
+									"tests[\"Poll is valid\"] = tv4.validate(data, pollSchema);",
+									"pm.environment.set(\"pollSchema\", pollSchema);",
+									"pm.environment.set(\"pollId\", data.id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Create Poll Test 7\",\n\t\"details\": \"descripcion\",\n\t\"creation_date\":\"2018-11-30\",\n\t\"close_date\": \"2019-12-03\",\n\t\"acceptance_percentage\": 50,\n\t\"anonymity\": true,\n\t\"questions\": [\n\t\t{\n\t\t\t\"question\": \"¿Que calificación le darías a la clase de Technical Writing?\", \n\t\t\t\"options\":[\n\t\t\t\t{\"option_text\": \"Muy mala\", \"order_priority\":1},\n\t\t\t\t{\"option_text\": \"Mala\", \"order_priority\":2},\n\t\t\t\t{\"option_text\": \"Mas o menos\", \"order_priority\":3},\n\t\t\t\t{\"option_text\": \"Buena\", \"order_priority\":4},\n\t\t\t\t{\"option_text\": \"Muy buena\", \"order_priority\":5}\n\t\t\t]\n\t\t},\n\t\t{\n\t\t\t\"question\": \"¿Que calificación le darías a la clase de Seguridad?\", \n\t\t\t\"options\":[\n\t\t\t\t{\"option_text\": \"Muy mala\", \"order_priority\":1},\n\t\t\t\t{\"option_text\": \"Mala\", \"order_priority\":2},\n\t\t\t\t{\"option_text\": \"Mas o menos\", \"order_priority\":3},\n\t\t\t\t{\"option_text\": \"Buena\", \"order_priority\":4},\n\t\t\t\t{\"option_text\": \"Muy buena\", \"order_priority\":5}\n\t\t\t]\n\t\t},\n\t\t{\n\t\t\t\"question\": \"¿Que calificación le darías a la clase de UX?\", \n\t\t\t\"options\":[\n\t\t\t\t{\"option_text\": \"Muy mala\", \"order_priority\":1},\n\t\t\t\t{\"option_text\": \"Mala\", \"order_priority\":2},\n\t\t\t\t{\"option_text\": \"Mas o menos\", \"order_priority\":3},\n\t\t\t\t{\"option_text\": \"Buena\", \"order_priority\":4},\n\t\t\t\t{\"option_text\": \"Muy buena\", \"order_priority\":5}\n\t\t\t]\n\t\t},\n\t\t{\n\t\t\t\"question\": \"¿Que calificación le darías a la clase de Desarrollo Web?\", \n\t\t\t\"options\":[\n\t\t\t\t{\"option_text\": \"Muy mala\", \"order_priority\":1},\n\t\t\t\t{\"option_text\": \"Mala\", \"order_priority\":2},\n\t\t\t\t{\"option_text\": \"Mas o menos\", \"order_priority\":3},\n\t\t\t\t{\"option_text\": \"Buena\", \"order_priority\":4},\n\t\t\t\t{\"option_text\": \"Muy buena\", \"order_priority\":5}\n\t\t\t]\n\t\t}\n\t],\n\t\"users\": [\n\t\t\"postmanTest1@mail.com\"\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/polls",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"polls"
+							]
+						},
+						"description": "The endpoint `POST /polls` create a new poll."
+					},
+					"response": []
+				},
+				{
+					"name": "Get all polls",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aaad5471-c8f1-4005-a644-15a77039d791",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const pollSchema = pm.environment.get(\"pollSchema\");",
+									"",
+									"pm.test('Matches Poll property value', () => {",
+									"    _.each(pm.response.json(), (arrItem) => {",
+									"        tests[\"Poll is valid\"] = tv4.validate(arrItem, pollSchema);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/polls",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"polls"
+							]
+						},
+						"description": "The endpoint `GET /polls` return a set of all created polls."
+					},
+					"response": []
+				},
+				{
+					"name": "Get poll by Id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "20fda3c2-c914-4d53-b532-8f16bca9c5f2",
+								"exec": [
+									"",
+									"const id = pm.environment.get(\"pollId\");",
+									"pm.variables.set('POLL_ID', id);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "aae8aaf4-89e7-4c13-8222-fcf4c8199a1f",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const pollSchema = pm.environment.get(\"pollSchema\");",
+									"var resData = pm.response.json();",
+									"",
+									"tests[\"Poll is valid\"] = tv4.validate(resData, pollSchema);",
+									"",
+									"pm.test(\"Correct id\", function () {",
+									"    pm.expect(resData.id).to.eql(pm.environment.get(\"pollId\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/polls/{{POLL_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"polls",
+								"{{POLL_ID}}"
+							]
+						},
+						"description": "The endpoint `GET /polls/{{POLL_ID}}` return the poll with the Id."
+					},
+					"response": []
+				}
+			],
+			"description": "The polls genereated by admin users for paneslist users to participate in."
+		},
+		{
 			"name": "Votes",
 			"item": [
 				{
@@ -553,6 +585,16 @@
 								],
 								"type": "text/javascript"
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "967431ae-ad11-4e17-9ebf-8501a05a00c4",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
 						}
 					],
 					"request": {
@@ -567,7 +609,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 55,\n    \"title\": \"Test Votación para decidir si las clases de Wizeline valen la pena\",\n    \"details\": \"Esta votación es solo para consolidar la opinion de los estudiantes de Wizeline para obtener feedback de las clases impartidas por Wizeline. La votación será anonima para que los alumnos sean honestos con las repsuestas.\",\n    \"creation_date\": \"2018-11-30T00:00:00\",\n    \"close_date\": \"2018-12-03T00:00:00\",\n    \"acceptance_percentage\": 10,\n    \"anonymity\": true,\n    \"questions\": [\n        {\n            \"question\": \"¿Que calificación le darías a la clase de Technical Writing?\",\n            \"order_priority\": 1,\n            \"response\": 2,\n            \"options\": [\n                {\n                    \"option_text\": \"Muy mala\",\n                    \"order_priority\": 1\n                },\n                {\n                    \"option_text\": \"Mala\",\n                    \"order_priority\": 2\n                },\n                {\n                    \"option_text\": \"Mas o menos\",\n                    \"order_priority\": 3\n                },\n                {\n                    \"option_text\": \"Buena\",\n                    \"order_priority\": 4\n                },\n                {\n                    \"option_text\": \"Muy buena\",\n                    \"order_priority\": 5\n                }\n            ]\n        },\n        {\n            \"question\": \"¿Que calificación le darías a la clase de Seguridad?\",\n            \"order_priority\": 2,\n            \"response\": 2,\n            \"options\": [\n                {\n                    \"option_text\": \"Muy mala\",\n                    \"order_priority\": 1\n                },\n                {\n                    \"option_text\": \"Mala\",\n                    \"order_priority\": 2\n                },\n                {\n                    \"option_text\": \"Mas o menos\",\n                    \"order_priority\": 3\n                },\n                {\n                    \"option_text\": \"Buena\",\n                    \"order_priority\": 4\n                },\n                {\n                    \"option_text\": \"Muy buena\",\n                    \"order_priority\": 5\n                }\n            ]\n        },\n        {\n            \"question\": \"¿Que calificación le darías a la clase de UX?\",\n            \"order_priority\": 3,\n            \"response\": null,\n            \"options\": [\n                {\n                    \"option_text\": \"Muy mala\",\n                    \"order_priority\": 1\n                },\n                {\n                    \"option_text\": \"Mala\",\n                    \"order_priority\": 2\n                },\n                {\n                    \"option_text\": \"Mas o menos\",\n                    \"order_priority\": 3\n                },\n                {\n                    \"option_text\": \"Buena\",\n                    \"order_priority\": 4\n                },\n                {\n                    \"option_text\": \"Muy buena\",\n                    \"order_priority\": 5\n                }\n            ]\n        },\n        {\n            \"question\": \"¿Que calificación le darías a la clase de Desarrollo Web?\",\n            \"order_priority\": 4,\n            \"response\": 2,\n            \"options\": [\n                {\n                    \"option_text\": \"Muy mala\",\n                    \"order_priority\": 1\n                },\n                {\n                    \"option_text\": \"Mala\",\n                    \"order_priority\": 2\n                },\n                {\n                    \"option_text\": \"Mas o menos\",\n                    \"order_priority\": 3\n                },\n                {\n                    \"option_text\": \"Buena\",\n                    \"order_priority\": 4\n                },\n                {\n                    \"option_text\": \"Muy buena\",\n                    \"order_priority\": 5\n                }\n            ]\n        }\n    ]\n}"
+							"raw": "{\r\n    \"id\": {{pollId}},\r\n    \"acceptance_percentage\": 50,\r\n    \"anonymity\": true,\r\n    \"questions\": [\r\n        {\r\n            \"question\": \"¿Que calificación le darías a la clase de Technical Writing?\",\r\n            \"order_priority\": 1,\r\n            \"response\": 4,\r\n            \"options\": [\r\n                {\r\n                    \"option_text\": \"Muy mala\",\r\n                    \"order_priority\": 1\r\n                },\r\n                {\r\n                    \"option_text\": \"Mala\",\r\n                    \"order_priority\": 2\r\n                },\r\n                {\r\n                    \"option_text\": \"Mas o menos\",\r\n                    \"order_priority\": 3\r\n                },\r\n                {\r\n                    \"option_text\": \"Buena\",\r\n                    \"order_priority\": 4\r\n                },\r\n                {\r\n                    \"option_text\": \"Muy buena\",\r\n                    \"order_priority\": 5\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"question\": \"¿Que calificación le darías a la clase de Seguridad?\",\r\n            \"order_priority\": 2,\r\n            \"response\": 3,\r\n            \"options\": [\r\n                {\r\n                    \"option_text\": \"Muy mala\",\r\n                    \"order_priority\": 1\r\n                },\r\n                {\r\n                    \"option_text\": \"Mala\",\r\n                    \"order_priority\": 2\r\n                },\r\n                {\r\n                    \"option_text\": \"Mas o menos\",\r\n                    \"order_priority\": 3\r\n                },\r\n                {\r\n                    \"option_text\": \"Buena\",\r\n                    \"order_priority\": 4\r\n                },\r\n                {\r\n                    \"option_text\": \"Muy buena\",\r\n                    \"order_priority\": 5\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"question\": \"¿Que calificación le darías a la clase de UX?\",\r\n            \"order_priority\": 3,\r\n            \"response\": 2,\r\n            \"options\": [\r\n                {\r\n                    \"option_text\": \"Muy mala\",\r\n                    \"order_priority\": 1\r\n                },\r\n                {\r\n                    \"option_text\": \"Mala\",\r\n                    \"order_priority\": 2\r\n                },\r\n                {\r\n                    \"option_text\": \"Mas o menos\",\r\n                    \"order_priority\": 3\r\n                },\r\n                {\r\n                    \"option_text\": \"Buena\",\r\n                    \"order_priority\": 4\r\n                },\r\n                {\r\n                    \"option_text\": \"Muy buena\",\r\n                    \"order_priority\": 5\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"question\": \"¿Que calificación le darías a la clase de Desarrollo Web?\",\r\n            \"order_priority\": 4,\r\n            \"response\": 1,\r\n            \"options\": [\r\n                {\r\n                    \"option_text\": \"Muy mala\",\r\n                    \"order_priority\": 1\r\n                },\r\n                {\r\n                    \"option_text\": \"Mala\",\r\n                    \"order_priority\": 2\r\n                },\r\n                {\r\n                    \"option_text\": \"Mas o menos\",\r\n                    \"order_priority\": 3\r\n                },\r\n                {\r\n                    \"option_text\": \"Buena\",\r\n                    \"order_priority\": 4\r\n                },\r\n                {\r\n                    \"option_text\": \"Muy buena\",\r\n                    \"order_priority\": 5\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}"
 						},
 						"url": {
 							"raw": "{{url}}/votes",
@@ -657,6 +699,59 @@
 						"description": "The endpoint `GET /votes/{{CODE}}` return the vote with the specified code."
 					},
 					"response": []
+				},
+				{
+					"name": "Try to vote again",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aa97557b-4229-416a-bfbd-62638716687d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "967431ae-ad11-4e17-9ebf-8501a05a00c4",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": {{pollId}},\r\n    \"acceptance_percentage\": 50,\r\n    \"anonymity\": true,\r\n    \"questions\": [\r\n        {\r\n            \"question\": \"¿Que calificación le darías a la clase de Technical Writing?\",\r\n            \"order_priority\": 1,\r\n            \"response\": 4,\r\n            \"options\": [\r\n                {\r\n                    \"option_text\": \"Muy mala\",\r\n                    \"order_priority\": 1\r\n                },\r\n                {\r\n                    \"option_text\": \"Mala\",\r\n                    \"order_priority\": 2\r\n                },\r\n                {\r\n                    \"option_text\": \"Mas o menos\",\r\n                    \"order_priority\": 3\r\n                },\r\n                {\r\n                    \"option_text\": \"Buena\",\r\n                    \"order_priority\": 4\r\n                },\r\n                {\r\n                    \"option_text\": \"Muy buena\",\r\n                    \"order_priority\": 5\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"question\": \"¿Que calificación le darías a la clase de Seguridad?\",\r\n            \"order_priority\": 2,\r\n            \"response\": 3,\r\n            \"options\": [\r\n                {\r\n                    \"option_text\": \"Muy mala\",\r\n                    \"order_priority\": 1\r\n                },\r\n                {\r\n                    \"option_text\": \"Mala\",\r\n                    \"order_priority\": 2\r\n                },\r\n                {\r\n                    \"option_text\": \"Mas o menos\",\r\n                    \"order_priority\": 3\r\n                },\r\n                {\r\n                    \"option_text\": \"Buena\",\r\n                    \"order_priority\": 4\r\n                },\r\n                {\r\n                    \"option_text\": \"Muy buena\",\r\n                    \"order_priority\": 5\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"question\": \"¿Que calificación le darías a la clase de UX?\",\r\n            \"order_priority\": 3,\r\n            \"response\": 2,\r\n            \"options\": [\r\n                {\r\n                    \"option_text\": \"Muy mala\",\r\n                    \"order_priority\": 1\r\n                },\r\n                {\r\n                    \"option_text\": \"Mala\",\r\n                    \"order_priority\": 2\r\n                },\r\n                {\r\n                    \"option_text\": \"Mas o menos\",\r\n                    \"order_priority\": 3\r\n                },\r\n                {\r\n                    \"option_text\": \"Buena\",\r\n                    \"order_priority\": 4\r\n                },\r\n                {\r\n                    \"option_text\": \"Muy buena\",\r\n                    \"order_priority\": 5\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"question\": \"¿Que calificación le darías a la clase de Desarrollo Web?\",\r\n            \"order_priority\": 4,\r\n            \"response\": 1,\r\n            \"options\": [\r\n                {\r\n                    \"option_text\": \"Muy mala\",\r\n                    \"order_priority\": 1\r\n                },\r\n                {\r\n                    \"option_text\": \"Mala\",\r\n                    \"order_priority\": 2\r\n                },\r\n                {\r\n                    \"option_text\": \"Mas o menos\",\r\n                    \"order_priority\": 3\r\n                },\r\n                {\r\n                    \"option_text\": \"Buena\",\r\n                    \"order_priority\": 4\r\n                },\r\n                {\r\n                    \"option_text\": \"Muy buena\",\r\n                    \"order_priority\": 5\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/votes",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"votes"
+							]
+						},
+						"description": "The endpoint `POST /votes` creates a new anonymoous vote."
+					},
+					"response": []
 				}
 			],
 			"description": "The votes genereated each time an user participates in a poll.",
@@ -682,6 +777,60 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "Results",
+			"item": [
+				{
+					"name": "Get results by id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "e9e42f71-c821-42b6-a464-e8a97d151f0c",
+								"exec": [
+									"const id = pm.environment.get(\"pollId\");",
+									"pm.variables.set('POLL_ID', id);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "342a9cca-6ac6-4dbd-96b7-9b3bb18244ea",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/results/{{POLL_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"results",
+								"{{POLL_ID}}"
+							]
+						},
+						"description": "The endpoint `GET results/{{POLL_ID}}` return the results of a poll that has ended."
+					},
+					"response": []
+				}
+			],
+			"description": "The vote results the panelist user can request after a vote has ended."
 		}
 	],
 	"auth": {
@@ -718,9 +867,9 @@
 	],
 	"variable": [
 		{
-			"id": "a39b5740-01c0-4b1c-a5f5-c9aa2eb524ae",
+			"id": "37243e59-65ca-4c1f-aa33-821fc35df327",
 			"key": "authToken",
-			"value": "eyJraWQiOiJjOWFzZ3AxQ3pLRk1yZkJwMC1nTmQ4ODdUUlBwRHJmWjI2eVFjUmpCWUowIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlhnUlc0czZ5TmV6V3NzUl9BSUx1OFZsSEF0Zzg5MVY4cm41dm9oazlFRFEiLCJpc3MiOiJodHRwczovL2Rldi03NDkyMjEub2t0YXByZXZpZXcuY29tL29hdXRoMi9hdXNndDZpZmkxWlZwM3VtUjBoNyIsImF1ZCI6Ildpa2lwb2xpdGljYSIsImlhdCI6MTU0MzM2ODY3MCwiZXhwIjoxNTQzMzcyMjcwLCJjaWQiOiIwb2FnbmdubXBxbUtCMFM2dDBoNyIsInVpZCI6IjAwdWd6cDFoc2lpQUpSQU1JMGg3Iiwic2NwIjpbInBhcnRzX21hbmFnZXIiLCJlbWFpbCIsIm9wZW5pZCJdLCJzdWIiOiJwb3N0bWFuQHBhbmVsaXN0LmNvbSJ9.qtyXJiQLmxT07kn3a7-GsjN-nRX_GLWW144_d9b-8cvNmRTTPS339qBeeWlADNmHaYfqW5dNtVCF9r9gLxLZDR9y6rLZdSJ4SCA72SiZDuEOkpLKW0SVjkYwl4btCLAa5Drr_Yx4jhTDpI9zx8a6W3GS3oNVKTXu-27RYVabsZlersVBrkTO4V59T4cf7RiYZa0DNpazrAjOUR0UgM_umOqaAC6rMZWnNVEA12Sd4p-l-hJAHDdaIDRhL4vT5ZTKqrvfmIzwyF6gA-0817AwWu0Lib87zlCjFoux0AFG3bxeZGDqwl5FAo2zdpJSXdDNtTXy-D4fYnAefkbWAGXZ_Q",
+			"value": "eyJraWQiOiJjOWFzZ3AxQ3pLRk1yZkJwMC1nTmQ4ODdUUlBwRHJmWjI2eVFjUmpCWUowIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULmpURk5WX0JlejlOVGx3M3JnMktoLUo5TmlNZ1dwSlZaRnQ3X05SQTlVLTQiLCJpc3MiOiJodHRwczovL2Rldi03NDkyMjEub2t0YXByZXZpZXcuY29tL29hdXRoMi9hdXNndDZpZmkxWlZwM3VtUjBoNyIsImF1ZCI6Ildpa2lwb2xpdGljYSIsImlhdCI6MTU0MzM4Mzc2MywiZXhwIjoxNTQzNDcwMTYzLCJjaWQiOiIwb2FnbmdubXBxbUtCMFM2dDBoNyIsInVpZCI6IjAwdWh2dW40bHd0dGJEc1dQMGg3Iiwic2NwIjpbInBhcnRzX21hbmFnZXIiLCJvcGVuaWQiLCJlbWFpbCJdLCJzdWIiOiJwb3N0bWFuVGVzdDFAbWFpbC5jb20ifQ.tmOLbKL-q6U5B2NSTIFFZBbqO37hJH5de9zElpEBSuEkVuzxXDFdP8t6wN2QHCO0hbNHjVtCqruCYQbKyH_6ibjKh1XV9qbPVguc_Gt_7i__nNYUXCed_AUz9T9IUQEtXqTizTZefP93l0VQJRX725pVYCPnhGADTm1GYxqhugSjP-UueVXVi5Iy1wGDoJZ9h3o2lhkZKy7pTLCr-qM3OcPUu84TwP_4U3WRB-MiND5SqD248Z93K_7n_arU9G2lXaHjAfKqiaeQGhuw6eBQPE3Xx9d89TMEYe0dtQcvGOzmdZ2tppMwij1bgNLhSEU9wfSDuZu3HpSBHZxADO9-uw",
 			"type": "string"
 		}
 	]
