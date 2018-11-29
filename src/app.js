@@ -1,42 +1,28 @@
-// BASE SETUP =============================================================================
-
+// BASE SETUP
 require('dotenv').config();
-const express = require('express');        // call express
-const app = express();                 // define our app using express
+const express = require('express');
 const bodyParser = require('body-parser');
-const http = require('http');
-const { promisify } = require('util');
 const cors = require('cors');
+const helmet = require('helmet');
+const expressValidator = require('express-validator');
 
-const initializeDatabase = require('./services/database'); //USE DATABASE FROM THE SCRIPT
-const authMiddleware = require('./auth');
+const app = express();
 
-// configure app to use bodyParser()
-// this will let us get the data from a POST
+const port = process.env.PORT;
+const routes = require('./routes/index.js');
+const authMiddleware = require('./auth'); // eslint-disable-line
+
+app.use(cors());
+app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
-app.use(authMiddleware);
+app.use(authMiddleware); // TODO: remove comment for production
+app.use(expressValidator());
 
-// ROUTES FOR OUR API =============================================================================
-var router = express.Router();              // get an instance of the express Router
+// ROUTES FOR OUR API
+app.use('/', routes);
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });
+// START THE SERVER
+app.listen(port, () => {
+  console.log(`App running on port ${port}.`); // eslint-disable-line
 });
-
-// more routes for our API will happen here
-
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-app.use('/api', router);
-
-// START THE SERVER =============================================================================
-const startServer = async () => {
-  await initializeDatabase(app); //WAIT UNTIL DATABASE IS INITIALIZED
-  const port = process.env.PORT || 8081;        // set our port
-  await promisify(app.listen).bind(app)(port)
-  console.log('Magic happens on port ' + port);
-}
-startServer();

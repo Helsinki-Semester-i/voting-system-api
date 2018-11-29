@@ -1,0 +1,727 @@
+{
+	"info": {
+		"_postman_id": "9e8eda69-3764-4cf9-9575-33140d366c4c",
+		"name": "API Voting System",
+		"description": "# Voting System API\n\nThis project enables the creation of anonymous and non-anonymous polls for specific users.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "oauth",
+			"item": [
+				{
+					"name": "Get user with login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c6584fa0-c9a5-42fe-a79c-32146eac537b",
+								"exec": [
+									"const email = \"geratrex@hotmail.com\";",
+									"pm.variables.set('EMAIL', email);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/oauth/{{EMAIL}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"oauth",
+								"{{EMAIL}}"
+							]
+						},
+						"description": "The endpoint `Get /users/{{login}}` retrieves information about the user using its unique login field (email)."
+					},
+					"response": []
+				},
+				{
+					"name": "List all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/oauth",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"oauth"
+							]
+						},
+						"description": "The endpoint `GET /users/panelists` return th information of all users registered"
+					},
+					"response": []
+				},
+				{
+					"name": "Create users",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"profile\": {\n    \"firstName\": \"name\",\n    \"lastName\": \"last name\",\n    \"email\": \"sample@mail.com\",\n    \"login\": \"sample@mail.com\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/oauth?activate=true",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"oauth"
+							],
+							"query": [
+								{
+									"key": "activate",
+									"value": "true"
+								}
+							]
+						},
+						"description": "The endpoint `POST /users` creates a new panelist able to participate."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "25d8db18-b4e5-44d7-afc7-79f60df569b8",
+								"exec": [
+									"const ID = \"00ugyaj3w6NNzFuez0h7\";",
+									"pm.variables.set('OKTA_ID', ID);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/oauth/{{OKTA_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"oauth",
+								"{{OKTA_ID}}"
+							]
+						},
+						"description": "The endpoint `DELETE /users/{{userId}}` removes a panelist using its ID"
+					},
+					"response": []
+				}
+			],
+			"description": "Generate calls to Okta auth API through our API",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "4aa6382f-7c06-4f40-9efa-d1a04eb2bf51",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "45ea8b28-f665-4352-bbef-7407e6c97b15",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create new user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1c41f230-a738-4d98-b92b-ec806cf9d4d2",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"const userSchema = {",
+									"  \"required\": [\"id\", \"first_name\", \"last_name\", \"email\", \"phone\"],",
+									"  \"properties\": {",
+									"    \"id\": {",
+									"      \"type\": \"integer\",",
+									"      \"minimum\": 0,",
+									"    },",
+									"    \"first_name\": {",
+									"      \"type\": \"string\",",
+									"      \"minLength\": 1,",
+									"      \"maxLength\": 25",
+									"    },",
+									"    \"last_name\": {",
+									"      \"type\": \"string\",",
+									"      \"minLength\": 1,",
+									"      \"maxLength\": 25",
+									"    },",
+									"    \"email\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"phone\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"  }",
+									"};",
+									"",
+									"pm.environment.set(\"userEmail\", \"postmanTest1@mail.com\");",
+									"pm.environment.set(\"userSchema\", userSchema);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"first_name\": \"PostmanTest1\",\n\t\"last_name\": \"PTest1\",\n\t\"email\": \"postmanTest1@mail.com\",\n\t\"phone\": 123456789\n}"
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "The endpoint `POST /user` creates a new user using name and email as body params"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d5076bdf-7543-4f49-b730-cc58e0d5bb30",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const userSchema = pm.environment.get(\"userSchema\");",
+									"",
+									"pm.test('Matches User property value', () => {",
+									"    _.each(pm.response.json(), (arrItem) => {",
+									"        tests[\"User is valid\"] = tv4.validate(arrItem, userSchema);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "The endpoint `GET /users` returns a list of created users"
+					},
+					"response": []
+				},
+				{
+					"name": "Get user with email",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "486c8f81-869a-4257-85e9-9a544d9cd6a4",
+								"exec": [
+									"",
+									"const email = pm.environment.get(\"userEmail\");",
+									"pm.variables.set('USER_EMAIL', email);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "a589c24b-7244-4748-8293-ff890d482929",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var data = pm.response.json();",
+									"var IdSchema = {",
+									"  \"id\": {",
+									"    \"type\": \"integer\"",
+									"  }",
+									"};",
+									"",
+									"tests[\"Id is valid\"] = tv4.validate(data, IdSchema);",
+									"",
+									"pm.environment.set(\"userId\", data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/users/byMail/{{USER_EMAIL}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"byMail",
+								"{{USER_EMAIL}}"
+							]
+						},
+						"description": "The endpoint `GET /users/{{USER_EMAIL}}` retrieves information about the user with its email"
+					},
+					"response": []
+				},
+				{
+					"name": "Get user with Id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "38bc716c-6fd7-47bf-b39a-18b8b8e25039",
+								"exec": [
+									"",
+									"const ID = pm.environment.get(\"userId\");",
+									"pm.variables.set('USER_ID', ID);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "1f0d53e6-508e-4c74-add9-098057e735e1",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/users/{{USER_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"{{USER_ID}}"
+							]
+						},
+						"description": "The endpoint `GET users/{{id}}` returns informattion about a single user using its ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4567b723-1101-47d4-9e79-6fc9e95c1b33",
+								"exec": [
+									"const ID = pm.environment.get(\"userId\");",
+									"pm.variables.set('USER_ID', ID);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "a9dfb9bc-70b7-44ca-bdcf-6f43161f5554",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const ID = pm.environment.get(\"userId\");",
+									"",
+									"pm.test(\"Body matches string response\", function () {",
+									"    pm.expect(pm.response.text()).to.include(`User modified with ID: ${ID}`);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"first_name\": \"PostmanTest1Updated\",\n\t\"last_name\": \"PTest1Updated\",\n\t\"email\": \"postmanTest1@updatedmail.com\",\n\t\"phone\": 123456789\n}"
+						},
+						"url": {
+							"raw": "{{url}}/users/{{USER_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"{{USER_ID}}"
+							]
+						},
+						"description": "The endpoint `PUT /users/{{id}}` update an user's name and email"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5a6ed8e2-2c9d-415d-b7c3-f99e2e3721cc",
+								"exec": [
+									"const ID = pm.environment.get(\"userId\");",
+									"pm.variables.set('USER_ID', ID);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "9b55aac8-187d-4beb-acad-6e2369151c90",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const ID = pm.environment.get(\"userId\");",
+									"",
+									"pm.test(\"Body matches string response\", function () {",
+									"    pm.expect(pm.response.text()).to.include(`User deleted with ID: ${ID}`);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/users/{{USER_ID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"{{USER_ID}}"
+							]
+						},
+						"description": "The endpoint `DELETE users/{{id}}` deletes the user using its ID"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints related to the user resource",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c682ff58-a722-4ac8-848f-add440b08fb5",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "7b11e4af-9cfd-4611-aa50-e83781832de4",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Votes",
+			"item": [
+				{
+					"name": "Create a new anonymous Vote",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aa97557b-4229-416a-bfbd-62638716687d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var data = pm.response.json();",
+									"",
+									"pm.environment.set(\"voteUCode\", data.unique_code);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 55,\n    \"title\": \"Test Votación para decidir si las clases de Wizeline valen la pena\",\n    \"details\": \"Esta votación es solo para consolidar la opinion de los estudiantes de Wizeline para obtener feedback de las clases impartidas por Wizeline. La votación será anonima para que los alumnos sean honestos con las repsuestas.\",\n    \"creation_date\": \"2018-11-30T00:00:00\",\n    \"close_date\": \"2018-12-03T00:00:00\",\n    \"acceptance_percentage\": 10,\n    \"anonymity\": true,\n    \"questions\": [\n        {\n            \"question\": \"¿Que calificación le darías a la clase de Technical Writing?\",\n            \"order_priority\": 1,\n            \"response\": 2,\n            \"options\": [\n                {\n                    \"option_text\": \"Muy mala\",\n                    \"order_priority\": 1\n                },\n                {\n                    \"option_text\": \"Mala\",\n                    \"order_priority\": 2\n                },\n                {\n                    \"option_text\": \"Mas o menos\",\n                    \"order_priority\": 3\n                },\n                {\n                    \"option_text\": \"Buena\",\n                    \"order_priority\": 4\n                },\n                {\n                    \"option_text\": \"Muy buena\",\n                    \"order_priority\": 5\n                }\n            ]\n        },\n        {\n            \"question\": \"¿Que calificación le darías a la clase de Seguridad?\",\n            \"order_priority\": 2,\n            \"response\": 2,\n            \"options\": [\n                {\n                    \"option_text\": \"Muy mala\",\n                    \"order_priority\": 1\n                },\n                {\n                    \"option_text\": \"Mala\",\n                    \"order_priority\": 2\n                },\n                {\n                    \"option_text\": \"Mas o menos\",\n                    \"order_priority\": 3\n                },\n                {\n                    \"option_text\": \"Buena\",\n                    \"order_priority\": 4\n                },\n                {\n                    \"option_text\": \"Muy buena\",\n                    \"order_priority\": 5\n                }\n            ]\n        },\n        {\n            \"question\": \"¿Que calificación le darías a la clase de UX?\",\n            \"order_priority\": 3,\n            \"response\": null,\n            \"options\": [\n                {\n                    \"option_text\": \"Muy mala\",\n                    \"order_priority\": 1\n                },\n                {\n                    \"option_text\": \"Mala\",\n                    \"order_priority\": 2\n                },\n                {\n                    \"option_text\": \"Mas o menos\",\n                    \"order_priority\": 3\n                },\n                {\n                    \"option_text\": \"Buena\",\n                    \"order_priority\": 4\n                },\n                {\n                    \"option_text\": \"Muy buena\",\n                    \"order_priority\": 5\n                }\n            ]\n        },\n        {\n            \"question\": \"¿Que calificación le darías a la clase de Desarrollo Web?\",\n            \"order_priority\": 4,\n            \"response\": 2,\n            \"options\": [\n                {\n                    \"option_text\": \"Muy mala\",\n                    \"order_priority\": 1\n                },\n                {\n                    \"option_text\": \"Mala\",\n                    \"order_priority\": 2\n                },\n                {\n                    \"option_text\": \"Mas o menos\",\n                    \"order_priority\": 3\n                },\n                {\n                    \"option_text\": \"Buena\",\n                    \"order_priority\": 4\n                },\n                {\n                    \"option_text\": \"Muy buena\",\n                    \"order_priority\": 5\n                }\n            ]\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/votes",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"votes"
+							]
+						},
+						"description": "The endpoint `POST /votes` creates a new anonymoous vote."
+					},
+					"response": []
+				},
+				{
+					"name": "Get a vote with code",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b8a8b049-7260-46fa-8c3a-6627d0a4671f",
+								"exec": [
+									"",
+									"const UCode = pm.environment.get(\"voteUCode\");",
+									"pm.variables.set('CODE', UCode);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "65322a65-a56a-494f-a9af-c08cc8e59b7e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const voteSchema = {",
+									"  \"type\": \"object\",",
+									"  \"required\": [\"id\", \"poll_id\", \"poll_anonymity\", \"unique_code\", \"poll\"],",
+									"  \"properties\": {",
+									"    \"id\": {",
+									"      \"type\": \"integer\",",
+									"      \"minimum\": 0,",
+									"    },",
+									"    \"poll_id\": {",
+									"      \"type\": \"integer\",",
+									"    },",
+									"    \"poll_anonymity\": {",
+									"      \"type\": \"boolean\",",
+									"    },",
+									"    \"unique_code\": {",
+									"      \"type\": \"string\",",
+									"    },",
+									"    \"poll\": {",
+									"        \"type\": \"object\",",
+									"    }",
+									"  }",
+									"};",
+									"",
+									"var data = pm.response.json();",
+									"tests[\"Vote is valid\"] = tv4.validate(data, voteSchema);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/votes/{{CODE}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"votes",
+								"{{CODE}}"
+							]
+						},
+						"description": "The endpoint `GET /votes/{{CODE}}` return the vote with the specified code."
+					},
+					"response": []
+				}
+			],
+			"description": "The votes genereated each time an user participates in a poll.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3f8ad669-d053-49f4-a532-c35ac1b6a274",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "eb2ce59a-ef64-4ca4-adda-eaf4bf4f4e22",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "19c93360-9c04-477f-b12d-6208982779b5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "70714ec5-80cd-499f-8be8-f41ec3c54bd9",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "a39b5740-01c0-4b1c-a5f5-c9aa2eb524ae",
+			"key": "authToken",
+			"value": "eyJraWQiOiJjOWFzZ3AxQ3pLRk1yZkJwMC1nTmQ4ODdUUlBwRHJmWjI2eVFjUmpCWUowIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlhnUlc0czZ5TmV6V3NzUl9BSUx1OFZsSEF0Zzg5MVY4cm41dm9oazlFRFEiLCJpc3MiOiJodHRwczovL2Rldi03NDkyMjEub2t0YXByZXZpZXcuY29tL29hdXRoMi9hdXNndDZpZmkxWlZwM3VtUjBoNyIsImF1ZCI6Ildpa2lwb2xpdGljYSIsImlhdCI6MTU0MzM2ODY3MCwiZXhwIjoxNTQzMzcyMjcwLCJjaWQiOiIwb2FnbmdubXBxbUtCMFM2dDBoNyIsInVpZCI6IjAwdWd6cDFoc2lpQUpSQU1JMGg3Iiwic2NwIjpbInBhcnRzX21hbmFnZXIiLCJlbWFpbCIsIm9wZW5pZCJdLCJzdWIiOiJwb3N0bWFuQHBhbmVsaXN0LmNvbSJ9.qtyXJiQLmxT07kn3a7-GsjN-nRX_GLWW144_d9b-8cvNmRTTPS339qBeeWlADNmHaYfqW5dNtVCF9r9gLxLZDR9y6rLZdSJ4SCA72SiZDuEOkpLKW0SVjkYwl4btCLAa5Drr_Yx4jhTDpI9zx8a6W3GS3oNVKTXu-27RYVabsZlersVBrkTO4V59T4cf7RiYZa0DNpazrAjOUR0UgM_umOqaAC6rMZWnNVEA12Sd4p-l-hJAHDdaIDRhL4vT5ZTKqrvfmIzwyF6gA-0817AwWu0Lib87zlCjFoux0AFG3bxeZGDqwl5FAo2zdpJSXdDNtTXy-D4fYnAefkbWAGXZ_Q",
+			"type": "string"
+		}
+	]
+}
