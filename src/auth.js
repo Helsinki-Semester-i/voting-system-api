@@ -8,6 +8,10 @@ const oktaJwtVerifier = new OktaJwtVerifier({
 // verify JWT token middleware
 // eslint-disable-next-line consistent-return
 module.exports = async (req, res, next) => {
+  if (req.method == 'GET' && (req.url.startsWith('/results') || req.url.startsWith('/polls') || req.url.startsWith('/votes'))) {
+    next();
+    return;
+  }
   // require every request to have an authorization header
   if (!req.headers.authorization) {
     return next(new Error('Authorization header is required'));
